@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authos</title>
+    <style> 
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #295c64;
+            color: #ffffff;
+        }
+
+        header {
+            background-color: #1d4049;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px; 
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            margin-right: 20px;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #295c64; 
+            color: #ffffff; 
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: white; 
+        }
+
+        
+        .main-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px;
+            background-color: #2d6d75;
+            border-radius: 20px;
+            margin: 20px;
+            max-width: 1200px;
+            margin: 40px auto;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            max-width: 50%;
+        }
+
+        .content h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .content p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .btn-primary {
+            background-color: #ffffff;
+            color: #295c64;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: #e1e1e1;
+        }
+
+        .image-container {
+            max-width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+/* imagem */
+        .image-container img {
+            border-radius: 20px;
+            max-width: 100%;
+            max-height: 500px; 
+            object-fit: cover;
+            clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+        }
+
+/* parte d0 FAQ */
+        .faq-section {
+            padding: 40px;
+            background-color: #2d6d75;
+            border-radius: 20px;
+            margin: 20px;
+            max-width: 1200px;
+            margin: 40px auto; 
+        }
+
+        .faq-section h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .faq-section p {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .faq-section p a {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .contact {
+            font-style: italic;
+            margin-top: 30px;
+            border-top: 1px solid #ffffff;
+            padding-top: 15px;
+            color: #ffffff;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header>
+        <div class="logo">Authos</div>
+        <ul class="nav-links">
+            <li><a href="#home">HOME</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="formlogin.php" class="btn">Entrar</a></li>
+        </ul>
+    </header>
+
+    <section id="home" class="main-section">
+        <div class="content">
+            <h1>Crie uma conta</h1>
+            <p>Explore os recursos disponíveis no site, como recursos educacionais ou oportunidades de colaboração profissional.</p>
+            <a href="criarconta.php" class="btn-primary">Criar</a>
+        </div>
+        <div class="image-container">
+            <img src="img/primeiraimg.png" alt="Imagem principal">
+        </div>
+    </section>
+
+    <!-- Seção FAQ -->
+    <section id="faq" class="faq-section">
+        <h2>FAQ</h2>
+        <p><strong>O que é o Authos?</strong><br>Authos é site disponível tanto para computador quanto pra smartphone. Aqui sua criança vai se desenvolver de uma maneira descontraída com a ajuda de seu psicólogo.</p>
+        <p><strong>O que devo fazer se encontrar problemas técnicos na plataforma?</strong><br>Se você encontrar problemas técnicos, entre em contato com nosso suporte técnico pelo e-mail <a href="mailto:suporte@authos.com">suporte@authos.com</a>.</p>
+        <p><strong>Como faço para me cadastrar?</strong><br>Você pode se cadastrar clicando no botão “Criar conta” na página inicial e preenchendo os dados solicitados. Você precisará fornecer informações básicas e criar uma senha para sua conta.</p>
+        <p><strong>O que é o código de identificação e como ele funciona?</strong><br>O código de identificação é um número único atribuído a cada paciente da plataforma Authos. Esse código serve para garantir a segurança e a privacidade das informações pessoais e para facilitar que o profissional encontre a conta de seu paciente.</p>
+        <p class="contact">Contato: (11) 4811-2027 // Fale conosco | suporte@authos.com</p>
+    </section>
+</body>
+</html>

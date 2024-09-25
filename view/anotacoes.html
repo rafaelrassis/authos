@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <title>Tela Anotações</title>
+    <style>
+        body {
+            background-color: #335b66;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            background-color: #DADADA;
+            width: 80%;
+            max-width: 1200px;
+            padding: 20px;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .note-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 1.2rem;
+        }
+
+        .notes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .note {
+            background-color: white;
+            padding: 15px;
+            border-radius: 15px;
+            width: calc(33% - 20px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .note textarea {
+            width: 100%;
+            height: 100px;
+            border: none;
+            resize: none;
+            border-radius: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .note img {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .note input[type="file"] {
+            display: none;
+        }
+
+        .add-note {
+            background-color: #335b66;
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        .delete-note {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Anotações:</h1>
+        </div>
+        <input type="text" class="note-input" placeholder="Criar uma nota...">
+        <div class="notes">
+            <div class="note" id="note-1">
+                <button class="delete-note" onclick="deleteNote('note-1')">X</button>
+                <textarea placeholder="Escreva aqui..."></textarea>
+                <label for="upload-image-1">
+                    <img id="preview-image-1" src="" alt="Adicionar imagem" />
+                    <input type="file" id="upload-image-1" accept="image/*" onchange="previewImage(event, 1)">
+                </label>
+            </div>
+        </div>
+        <div class="add-note" onclick="addNote()">+</div>
+    </div>
+
+    <script>
+        let noteCount = 1;
+
+        function previewImage(event, noteId) {
+            const input = event.target;
+            const preview = document.getElementById(`preview-image-${noteId}`);
+            const file = input.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function addNote() {
+            noteCount++;
+            const noteHtml = `
+                <div class="note" id="note-${noteCount}">
+                    <button class="delete-note" onclick="deleteNote('note-${noteCount}')">X</button>
+                    <textarea placeholder="Escreva aqui..."></textarea>
+                    <label for="upload-image-${noteCount}">
+                        <img id="preview-image-${noteCount}" src="" alt="Adicionar imagem" />
+                        <input type="file" id="upload-image-${noteCount}" accept="image/*" onchange="previewImage(event, ${noteCount})">
+                    </label>
+                </div>
+            `;
+            const notesContainer = document.querySelector('.notes');
+            notesContainer.insertAdjacentHTML('beforeend', noteHtml);
+        }
+
+        function deleteNote(noteId) {
+            const note = document.getElementById(noteId);
+            note.remove();
+        }
+    </script>
+</body>
+</html>

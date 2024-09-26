@@ -1,28 +1,21 @@
 <?php
 session_start();
-include_once('../model/paciente.php');
+require_once '../model/paciente.php'; // Inclua o arquivo do modelo de Paciente
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $codPaciente = addslashes($_POST['codigo']);
-
-    if (!empty($codPaciente)) {
-        $pacienteModel = new Paciente();
-        $paciente = $pacienteModel->buscarPorCodigo($codPaciente);
-
-        if ($paciente) {
-
-            $_SESSION['pacienteCod'] =    $codPaciente; 
-            header("Location: ../view/telapsicologo.php");
-            exit();
-        } else {
-            $_SESSION['statusBuscaCodPaciente'] = "Paciente não encontrado.";
-            header("Location: ../view/telapacienteCod.php");
-            exit();
-        }
-    } else {
-
-        header("Location: ../view/telapacienteCod.php");
-        exit();
-    }
+if (!isset($_SESSION['especialistaconectado'])) {
+    // Redirecionar se o especialista não estiver logado
+    header("Location: ../view/formlogin.php");
+    exit();
 }
+
+$cip = $_SESSION['especialistaconectado'];
+
+$pacienteModel = new Paciente();
+var_dump($cip); // Adicione isto para verificar o valor de cip
+$pacientes = $pacienteModel->buscarPacientesPorEspecialista($cip);
+
+$_SESSION['statusBuscaCodPaciente'] = count($pacientes) > 0 ? "" : "Nenhum paciente encontrado.";
+
+header("Location: ../view/telapacienteCod.php");
+exit();
 ?>

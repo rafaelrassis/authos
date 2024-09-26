@@ -3,6 +3,11 @@
 session_start();
 $_SESSION['statusCadastroEspecialista'] = isset($_SESSION['statusCadastroEspecialista']) ? $_SESSION['statusCadastroEspecialista'] : "";
 
+if (isset($_SESSION['statusCadastroEspecialista']) && $_SESSION['statusCadastroEspecialista'] !== "") {
+  echo "<div class='alert alert-warning'>{$_SESSION['statusCadastroEspecialista']}</div>";
+  unset($_SESSION['statusCadastroEspecialista']);
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">

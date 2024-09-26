@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($resultado) {
 
         $_SESSION['conectado'] = $resultado;
+        $_SESSION['especialistaconectado'] = $cip;
         header("Location: ../view/telapacienteCod.php"); 
         exit();
     } else {

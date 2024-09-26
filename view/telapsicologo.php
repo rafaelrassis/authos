@@ -1,5 +1,15 @@
 <?php
-include('../controller/protector.php');
+session_start(); // Inicia a sessão
+
+// Verifica se o CPF e o código do paciente estão na sessão
+if (isset($_SESSION['pacienteCpf']) && isset($_SESSION['pacienteCod'])) {
+    $cpfPaciente = $_SESSION['pacienteCpf']; // Obtém o CPF da sessão
+    $codPaciente = $_SESSION['pacienteCod']; // Obtém o código da sessão
+} else {
+    // Caso os dados não estejam disponíveis, redireciona ou exibe uma mensagem de erro
+    header('Location: formlogin.php');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -90,12 +100,32 @@ include('../controller/protector.php');
             margin-right: -10px;
         }
 
+        /* Estilo do botão "Buscar Novo Paciente" */
+        .btn-buscar {
+            background-color: #307c91;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            margin-top: 20px; /* Espaçamento acima do botão */
+        }
     </style>
 </head>
 <body>
     <div class="quadrado">
         <div class="cinza">
             <div class="textoUm">Área psicólogo</div>
+            <label>
+                CID Especialista: <?php echo htmlspecialchars($_SESSION['especialistaconectado']); ?>
+            </label>
+            <br>
+            <label>
+                CPF Paciente: <?php echo htmlspecialchars($_SESSION['pacienteCpf']); ?>
+            </label>
+
             <div class="link-container">
                 <a href="arquivos.php">
                     <img src="img/arq.png" alt="Arquivos paciente"> Arquivos do paciente
@@ -113,6 +143,10 @@ include('../controller/protector.php');
                     <button type="submit" style="background: none; border: none; cursor: pointer;">
                         <img src="img/sair.png" alt="Sair"> Sair
                     </button>
+                </form>
+                <!-- Botão para buscar novo paciente -->
+                <form action="telapacienteCod.php" method="GET">
+                    <button type="submit" class="btn-buscar">Buscar Novo Paciente</button>
                 </form>
             </div>
         </div>

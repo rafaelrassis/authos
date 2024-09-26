@@ -1,4 +1,5 @@
 <?php
+
 include('../controller/protector.php');
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -6,18 +7,33 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include('../model/paciente.php');
 
-if (!isset($_SESSION['pacienteCod'])) {
-    var_dump($_SESSION['pacienteCod']);
+
+
+// Verifica se o CPF e o código do paciente estão na sessão
+if (isset($_SESSION['pacienteCpf'])) {
+    $cpfPaciente = $_SESSION['pacienteCpf']; // Obtém o CPF da sessão
+} else {
+    // Caso os dados não estejam disponíveis, redireciona ou exibe uma mensagem de erro
+    header('Location: formlogin.php');
+    exit();
+} 
+
+if (!isset($_SESSION['pacienteCpf'])) {
+    var_dump($_SESSION['pacienteCpf']);
     
 }
 
 $infPaciente = new Paciente();
-$paciente = $infPaciente->obterInformacoes($_SESSION['pacienteCod']);
+$paciente = $infPaciente->obterInformacoesPaciente($_SESSION['pacienteCpf']);
 
 if ($paciente === false) {
-    echo "Erro ao obter informações do paciente ou paciente não encontrado.";
-    exit();
+    echo "Erro ao obter informações do paciente.";
+} else {
+    // Aqui você pode processar as informações do paciente
+ //   var_dump($paciente);
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -177,7 +193,7 @@ if ($paciente === false) {
         <div class="imageum">
             <div class="upload-container">
                 <label for="upload-image">
-                    <img id="preview-image" src="../<?php echo htmlspecialchars($paciente['foto']); ?>" alt="Foto paciente" />
+                    <img id="preview-image" src="<?php echo htmlspecialchars($paciente['foto']); ?>" alt="Foto paciente" />
                 </label>
                 
             </div>

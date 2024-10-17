@@ -20,39 +20,22 @@ class Paciente
         return $stmt->rowCount() > 0;
     }
 
-   public function inserePaciente($cpf, $nome, $senha, $email, $fotoPath, $cip, $data_nascimento)
+    public function inserePaciente($cpf, $nome, $senha, $email, $fotoPath, $cip, $data_nascimento, $telefone)
     {
-
         try {
-          $stmt = $this->pdo->prepare("INSERT INTO paciente (cpf, nome, senha, email, foto, cip, data_nascimento) VALUES (:cpf, :nome, :senha, :email, :foto, :cip, :data_nascimento)");
-           // $stmt = $this->pdo->prepare("INSERT INTO paciente (cpf) VALUES (:cpf)");
-         
+            $stmt = $this->pdo->prepare("INSERT INTO paciente (cpf, nome, senha, email, foto, cip, data_nascimento, telefone) VALUES (:cpf, :nome, :senha, :email, :foto, :cip, :data_nascimento, :telefone)");
+            
             $stmt->bindValue(':cpf', $cpf);
             $stmt->bindValue(':nome', $nome);
-            $stmt->bindValue(':senha',$senha); 
+            $stmt->bindValue(':senha', $senha); 
             $stmt->bindValue(':email', $email);
             $stmt->bindValue(':foto', $fotoPath);
-          $stmt->bindValue(':cip', $cip);
-          $stmt->bindValue(':data_nascimento', $data_nascimento);
-
+            $stmt->bindValue(':cip', $cip);
+            $stmt->bindValue(':data_nascimento', $data_nascimento);
+            $stmt->bindValue(':telefone', $telefone);
             return $stmt->execute();
         } catch (PDOException $e) {
             error_log("Erro ao inserir paciente: " . $e->getMessage());
-            return false;
-        }
-    }
-
-
-    public function buscarPorCodigo($codigo) 
-    {
-        try {
-            $consulta = $this->pdo->prepare("SELECT cpf FROM paciente WHERE cpf = :c");
-            $consulta->bindValue(":c", $codigo);
-            $consulta->execute();
-
-            return $consulta->fetchColumn() > 0;
-        } catch (PDOException $e) {
-            error_log('Erro ao verificar paciente: ' . $e->getMessage());
             return false;
         }
     }
@@ -65,22 +48,58 @@ class Paciente
             $consulta->execute();
             return $consulta->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            error_log('Erro ao buscar informações do paciente: ' . $e->getMessage());
+            error_log("Erro ao obter informações do paciente: " . $e->getMessage());
             return false;
         }
     }
 
-    public function buscarPacientesPorEspecialista($cip) {
-        try {
-            $consulta = $this->pdo->prepare("SELECT cpf, nome, senha, email, foto, data_nascimento FROM paciente WHERE cip = :cip");
-            $consulta->bindValue(":cip", $cip);
-            $consulta->execute();
-            return $consulta->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            error_log('Erro ao buscar pacientes: ' . $e->getMessage());
-            return [];
+    public function atualizaPaciente($cpf, $nome, $senha, $data_nascimento, $telefone, $email, $foto) {
+        // Usa o método conectar() para obter a conexão
+        $this->pdo = (new Conexao())->conectar();
+    
+        // Primeiro, busque a senha atual do paciente
+        $querySenhaAtual = "SELECT senha FROM paciente WHERE cpf = ?";
+        $stmtSenha = $this->pdo->prepare($querySenhaAtual);
+        $stmtSenha->execute([$cpf]);
+        $senhaAtual = $stmtSenha->fetchColumn();
+    
+        // Inicializa a parte da consulta
+        $query = "UPDATE paciente SET nome = ?, data_nascimento = ?, telefone = ?, email = ?";
+        
+        // Inicializa um array para os parâmetros
+        $params = [$nome, $data_nascimento, $telefone, $email];
+    
+        // Adiciona a nova senha se fornecida
+        if ($senha !== null) {
+            $query .= ", senha = ?";
+            $params[] = $senha; // Adiciona a nova senha
+        } else {
+            // Se a senha não for fornecida, mantém a senha atual
+            // Não precisamos adicionar a senha ao array de parâmetros, pois ela não será usada na atualização
         }
+    
+        // Adiciona a foto se fornecida
+        if ($foto !== null) {
+            $query .= ", foto = ?";
+            $params[] = $foto; // Adiciona a foto
+        }
+    
+        // Finaliza a consulta
+        $query .= " WHERE cpf = ?";
+        $params[] = $cpf; // Adiciona o CPF no final
+    
+        // Verifique o número de parâmetros e o número de tokens
+        $numTokens = substr_count($query, '?'); // Conta quantos ? existem na consulta
+        if (count($params) !== $numTokens) {
+            throw new Exception("Número de parâmetros não corresponde ao número de tokens na consulta. Tokens: $numTokens, Parâmetros: " . count($params));
+        }
+    
+        // Prepara e executa a consulta
+        $stmt = $this->pdo->prepare($query);
+        return $stmt->execute($params); // Executa a consulta
     }
+    
+    
     
 }
 ?>

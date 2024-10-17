@@ -93,20 +93,17 @@ include('../controller/protector.php');
     </style>
 </head>
 <body>
+<?php include 'menuPaciente.php'; ?>
     <div class="quadrado">
         <div class="cinza">
             <div class="textoUm">Área paciente</div>
             <div class="link-container">
-                <a href="arquivospaciente.html">
-                    <img src="img/arq.png" alt="Arquivos paciente"> Arquivos do paciente
-                </a>
+           
                 <a href="atividades.html">
                     <img src="img/atv.png" alt="Atividades"> Atividades
                 </a>
-                <form action="../controller/logout.php" method="POST">
-                    <button type="submit" style="background: none; border: none; cursor: pointer;">
-                        <img src="img/sair.png" alt="Sair"> Sair
-                    </button>
+               
+                 
             </div>
         </div>
         <div class="imageum"><img src="img/img02.png" alt="imagem um" width="800"></div>

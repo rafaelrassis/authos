@@ -54,6 +54,19 @@ class Especialista
             return false;
         }
     }
+    public function consultaEspecialistaPorCIP($cip)
+    {
+        try {
+            $consulta = $this->pdo->prepare("SELECT cip, nome, email, id_especialidade, senha FROM especialista WHERE cip = :c");
+            $consulta->bindValue(":c", $cip);
+            $consulta->execute();
+
+            return $consulta->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log('Erro ao verificar especialista: ' . $e->getMessage());
+            return false;
+        }
+    }
 
     public function consultaEspecialidade()
     {
@@ -66,6 +79,65 @@ class Especialista
             return []; // Retorne um array vazio em caso de erro
         }
     }
+    public function atualizaEspecialista($cip, $nome, $email, $senha, $id_especialidade)
+{
+    try {
+        $sql = "UPDATE especialista SET nome = :n, email = :em, id_especialidade = :es";
+        if ($senha) {
+            $sql .= ", senha = :s";
+        }
+        $sql .= " WHERE cip = :c";
+
+        $atualiza = $this->pdo->prepare($sql);
+        $atualiza->bindValue(":n", $nome);
+        $atualiza->bindValue(":em", $email);
+        $atualiza->bindValue(":es", $id_especialidade);
+        $atualiza->bindValue(":c", $cip);
+
+        if ($senha) {
+            $atualiza->bindValue(":s", $senha);
+        }
+
+        return $atualiza->execute();
+    } catch (PDOException $e) {
+        error_log('Erro ao atualizar: ' . $e->getMessage());
+        return false;
+    }
+}
+
+public function getPacientesComEspecialistas()
+{
+    try {
+        // Preparar a consulta SQL com o JOIN entre Paciente e Especialista
+        $sql = "SELECT 
+                    p.cpf, 
+                    p.nome AS nome_paciente, 
+                    p.email AS email_paciente, 
+                    p.data_nascimento, 
+                    p.telefone, 
+                    e.nome AS nome_especialista, 
+                    e.email AS email_especialista, 
+                    e.id_especialidade
+                FROM 
+                    Paciente p
+                JOIN 
+                    Especialista e 
+                ON 
+                    p.cip = e.cip";
+        
+        // Preparar e executar a consulta
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        
+        // Retornar os resultados
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // Em caso de erro, log o erro e retorne um array vazio
+        error_log('Erro ao consultar pacientes e especialistas: ' . $e->getMessage());
+        return [];
+    }
+}
+
     
 }
 ?>

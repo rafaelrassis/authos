@@ -1,13 +1,11 @@
 <?php
-include('../controller/protector.php');
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-$_SESSION['statusCadastroPaciente'] = isset($_SESSION['statusCadastroPaciente']) ? $_SESSION['statusCadastroPaciente'] : "";
 
+$_SESSION['statusCadastroPaciente'] = $_SESSION['statusCadastroPaciente'] ?? "";
 
-if (isset($_SESSION['statusCadastroPaciente']) && $_SESSION['statusCadastroPaciente'] !== "") {
+if (!empty($_SESSION['statusCadastroPaciente'])) {
     echo "<div class='alert alert-warning'>{$_SESSION['statusCadastroPaciente']}</div>";
     unset($_SESSION['statusCadastroPaciente']);
 }
@@ -27,8 +25,6 @@ if (isset($_SESSION['statusCadastroPaciente']) && $_SESSION['statusCadastroPacie
 
     <style>
         .gradient-custom-2 {
-            background: #335b66;
-            background: -webkit-linear-gradient(to right, #307c91, #335b66);
             background: linear-gradient(to right, #307c91, #335b66);
         }
         @media (min-width: 768px) {
@@ -36,19 +32,12 @@ if (isset($_SESSION['statusCadastroPaciente']) && $_SESSION['statusCadastroPacie
                 height: 100vh;
             }
         }
-        @media (min-width: 769px) {
-            .gradient-custom-2 {
-                border-top-right-radius: .3rem;
-                border-bottom-right-radius: .3rem;
-            }
-        }
     </style>
 
     <script>
         $(document).ready(function(){
             $('#cpf').mask('000.000.000-00');
-
-            $('#dta').mask('00/00/0000');
+            $('#telefone').mask('(00) 00000-0000'); // Máscara para telefone
 
             $('form').on('submit', function(event){
                 var cpf = $('#cpf').val().replace(/\D/g, '');
@@ -56,12 +45,6 @@ if (isset($_SESSION['statusCadastroPaciente']) && $_SESSION['statusCadastroPacie
                     alert('CPF deve ter 11 dígitos.');
                     event.preventDefault(); 
                     return;
-                }
-
-                var dataNascimento = $('#dta').val();
-                if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dataNascimento)) {
-                    alert('A data de nascimento deve estar no formato DD/MM/YYYY.');
-                    event.preventDefault();
                 }
             });
         });
@@ -79,8 +62,8 @@ if (isset($_SESSION['statusCadastroPaciente']) && $_SESSION['statusCadastroPacie
                             <div class="card-body p-md-5 mx-md-4">
                                 <div class="text-center">
                                     <img src="img/cabeca.png" style="width: 185px;" alt="logo">
-                                    <h4 class="mt-1 mb-5 pb-1">Authos</h4>
-                                    <strong><?php echo isset($_SESSION['statusCadastroPaciente']) ? $_SESSION['statusCadastroPaciente'] : ""; ?></strong>
+                                    <h4 class="mt-1 mb-5 pb-1">Criar paciente</h4>
+                                    <strong><?php echo $_SESSION['statusCadastroPaciente'] ?? ""; ?></strong>
                                     <br><br>
                                 </div>
 
@@ -91,13 +74,18 @@ if (isset($_SESSION['statusCadastroPaciente']) && $_SESSION['statusCadastroPacie
                                     </div>
 
                                     <div class="form-outline mb-4">
-                                        <input type="text" id="nome" name="nome" class="form-control" placeholder="Nome:"  required/>
+                                        <input type="text" id="nome" name="nome" class="form-control" placeholder="Nome:" required />
                                         <label class="form-label" for="nome">Digite o nome completo</label>
                                     </div>
 
                                     <div class="form-outline mb-4">
-                                        <input type="text" id="dta" name="dta" class="form-control" placeholder="DD/MM/AAAA" required/>
+                                        <input type="date" id="dta" name="data_nascimento" class="form-control" required />
                                         <label class="form-label" for="dta">Digite a data de nascimento</label>
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <input type="text" id="telefone" name="telefone" class="form-control" placeholder="(00) 00000-0000" required />
+                                        <label class="form-label" for="telefone">Digite o telefone</label>
                                     </div>
 
                                     <div class="form-outline mb-4">
@@ -111,7 +99,7 @@ if (isset($_SESSION['statusCadastroPaciente']) && $_SESSION['statusCadastroPacie
                                     </div>
 
                                     <div class="form-outline mb-4">
-                                        <input type="file" id="foto" name="foto" class="form-control"  required/>
+                                        <input type="file" id="foto" name="foto" class="form-control" required />
                                         <label class="form-label" for="foto">Escolha uma foto</label>
                                     </div>
 
@@ -135,7 +123,7 @@ if (isset($_SESSION['statusCadastroPaciente']) && $_SESSION['statusCadastroPacie
 
                                     <div>
                                         <button type="submit" class="btn btn-outline-dark">Cadastrar</button>
-                                        <a href="telapacienteCod.php" class="btn btn-outline-secondary">Voltar</a> <!-- Altere 'pagina_anterior.php' para a URL desejada -->
+                                       
                                     </div>
                                 </form>
 

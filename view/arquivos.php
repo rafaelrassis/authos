@@ -161,6 +161,7 @@ if ($paciente === false) {
     </style>
 </head>
 <body>
+<?php include 'menu.php'; ?>
     <div class="quadrado">
         <div class="cinza">
             <div class="textoUm">Informações:</div>
@@ -186,6 +187,10 @@ if ($paciente === false) {
                     <tr>
                         <th scope="row">E-mail:</th>
                         <td><label><?php echo htmlspecialchars($paciente['email']); ?></label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Telefone:</th>
+                        <td><label><?php echo htmlspecialchars($paciente['telefone']); ?></label></td>
                     </tr>
                 </tbody>
             </table>

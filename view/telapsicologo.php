@@ -1,5 +1,6 @@
 <?php
 session_start(); // Inicia a sessão
+include('../controller/protector.php');
 
 // Verifica se o CPF e o código do paciente estão na sessão
 if (isset($_SESSION['pacienteCpf']) && isset($_SESSION['pacienteCod'])) {
@@ -32,47 +33,52 @@ if (isset($_SESSION['pacienteCpf']) && isset($_SESSION['pacienteCod'])) {
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
         }
 
         .quadrado {
-            width: 80%; 
-            max-width: 1000px; 
+            width: 80%;
+            max-width: 1000px;
             height: 600px;
-            background: linear-gradient(to right,  #307c91, #335b66); 
-            display: flex; 
-            padding-left: 0px; 
+            background: linear-gradient(to right, #307c91, #335b66);
+            display: flex;
+            padding: 0;
             border-radius: 20px;
             position: relative;
+            overflow: hidden;
         }
 
         .cinza {  
-            width: 500px; 
-            height: 600px; 
-            background-color: #C0C0C0; 
+            width: 50%;
+            height: 100%;
+            background-color: #C0C0C0;
             border-radius: 5px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: relative;
             padding: 20px;
         }
 
         .imageum {
-            position: absolute;
-            display: inline-block;
-            transform: translate(45%, 1%);
+            width: 50%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .imageum img {
+            max-width: 100%;
+            max-height: 100%;
         }
 
         .textoUm {        
             font-style: normal;
             font-weight: 700;
-            font-variant: normal;
-            font-stretch: normal;
             font-family: 'Poppins', sans-serif;
             text-align: center;
             font-size: 1.8rem;
-            white-space: nowrap;
             margin-top: 2px;
         }
 
@@ -82,25 +88,25 @@ if (isset($_SESSION['pacienteCpf']) && isset($_SESSION['pacienteCod'])) {
             align-items: flex-start;
             margin-top: 20px;
             padding-left: 15px;
+            width: 100%;
         }
 
         .link-container a {
             display: flex;
-            align-items: center; 
-            margin: 20px;
+            align-items: center;
+            margin: 10px 0;
             text-decoration: none;
             color: #000;
             font-family: 'Poppins', sans-serif;
             font-size: 1.2rem;
-        }   
-
-        .link-container img {
-            width: 100px; 
-            height: 60px;
-            margin-right: -10px;
         }
 
-        /* Estilo do botão "Buscar Novo Paciente" */
+        .link-container img {
+            width: 60px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
         .btn-buscar {
             background-color: #307c91;
             color: white;
@@ -109,22 +115,39 @@ if (isset($_SESSION['pacienteCpf']) && isset($_SESSION['pacienteCod'])) {
             border-radius: 5px;
             cursor: pointer;
             font-family: 'Poppins', sans-serif;
-            font-size: 1.2rem;
-            margin-top: 20px; /* Espaçamento acima do botão */
+            font-size: 15px;
+            margin-top: 20px;
+            width: 100%;
+            text-align: center;
         }
+
+        button.btn-sair {
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        button.btn-sair img {
+            margin-right: 10px;
+        }
+
+       
     </style>
 </head>
 <body>
+   
+<?php include 'menu.php'; ?>
+
     <div class="quadrado">
         <div class="cinza">
             <div class="textoUm">Área psicólogo</div>
-            <label>
-                CID Especialista: <?php echo htmlspecialchars($_SESSION['especialistaconectado']); ?>
-            </label>
+            <label>CIP especialista conectado: <?php echo htmlspecialchars($_SESSION['especialistaconectado']); ?></label>
             <br>
-            <label>
-                CPF Paciente: <?php echo htmlspecialchars($_SESSION['pacienteCpf']); ?>
-            </label>
+            <label>CPF Paciente: <?php echo htmlspecialchars($_SESSION['pacienteCpf']); ?></label>
 
             <div class="link-container">
                 <a href="arquivos.php">
@@ -133,24 +156,17 @@ if (isset($_SESSION['pacienteCpf']) && isset($_SESSION['pacienteCod'])) {
                 <a href="atividades.html">
                     <img src="img/atv.png" alt="Atividades"> Atividades
                 </a>
-                <a href="anotacoes.html">
+                <a href="anotacoes.php">
                     <img src="img/nota.png" alt="Anotações"> Anotações
                 </a>
                 <a href="analise.html">
                     <img src="img/anls.png" alt="Analise"> Analise
                 </a>
-                <form action="../controller/logout.php" method="POST">
-                    <button type="submit" style="background: none; border: none; cursor: pointer;">
-                        <img src="img/sair.png" alt="Sair"> Sair
-                    </button>
-                </form>
-                <!-- Botão para buscar novo paciente -->
-                <form action="telapacienteCod.php" method="GET">
-                    <button type="submit" class="btn-buscar">Buscar Novo Paciente</button>
-                </form>
             </div>
         </div>
-        <div class="imageum"><img src="img/img02.png" alt="imagem um" width="800"></div>
+        <div class="imageum">
+            <img src="img/img02.png" alt="Imagem">
+        </div>
     </div>
 </body>
 </html>

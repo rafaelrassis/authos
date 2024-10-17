@@ -4,7 +4,7 @@ Class Conexao {
     private $pdo;
 
     private $host = "localhost";
-    private $dbname = "authosbd";
+    private $dbname = "authosdb";
     private $user = "root";
     private $senha = "";
 

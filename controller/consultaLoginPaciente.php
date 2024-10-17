@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($resultado) {
 
         $_SESSION['conectado'] = $resultado;
+        $_SESSION['conectadopaciente'] = $cpf;
         header("Location: ../view/telapaciente.php"); 
         exit();
     } else {

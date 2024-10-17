@@ -66,9 +66,10 @@ $statusBuscaCodPaciente = isset($_SESSION['statusBuscaCodPaciente']) ? $_SESSION
     </style>
 </head>
 <body>
+<?php include 'menu.php'; ?>
     <div class="container">
         <h2>Pacientes Associados</h2>
-        <strong><?php echo $_SESSION['especialistaconectado']; // Supondo que o nome do especialista esteja armazenado na sessão ?></strong>
+        CIP especialista conectado: <strong><?php echo $_SESSION['especialistaconectado'];?></strong>
         <strong><?php echo $statusBuscaCodPaciente; ?></strong>
 
         <ul class="list-group mt-3">
@@ -83,8 +84,7 @@ $statusBuscaCodPaciente = isset($_SESSION['statusBuscaCodPaciente']) ? $_SESSION
             <?php endif; ?>
         </ul>
 
-        <a href="criarpaciente.php" class="btn btn-success">Cadastrar Novo Paciente</a>
-        <a href="../view/formlogin.php" class="btn btn-primary">Voltar</a>
+    
     </div>
 
     <?php

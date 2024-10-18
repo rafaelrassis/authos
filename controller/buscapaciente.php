@@ -1,9 +1,8 @@
 <?php
 session_start();
-require_once '../model/paciente.php'; // Inclua o arquivo do modelo de Paciente
+require_once '../model/paciente.php'; 
 
 if (!isset($_SESSION['especialistaconectado'])) {
-    // Redirecionar se o especialista não estiver logado
     header("Location: ../view/formlogin.php");
     exit();
 }
@@ -11,7 +10,7 @@ if (!isset($_SESSION['especialistaconectado'])) {
 $cip = $_SESSION['especialistaconectado'];
 
 $pacienteModel = new Paciente();
-var_dump($cip); // Adicione isto para verificar o valor de cip
+var_dump($cip); 
 $pacientes = $pacienteModel->buscarPacientesPorEspecialista($cip);
 
 $_SESSION['statusBuscaCodPaciente'] = count($pacientes) > 0 ? "" : "Nenhum paciente encontrado.";

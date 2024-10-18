@@ -11,7 +11,6 @@ class Especialista
         $this->pdo = $conexao->conectar();
     }
 
-    // Método para inserir especialista
     public function insereEspecialista($cip, $nome, $email, $senha, $id_especialidade)
     {
         try {
@@ -32,14 +31,12 @@ class Especialista
         }
     }
 
-    // Método para retornar especialistas
     public function consultaEspecialistas()
     {
         $consulta = $this->pdo->query("SELECT cip, nome FROM especialista");
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Método para verificar se o especialista já existe
     public function especialistaExiste($cip, $email)
     {
         try {
@@ -105,38 +102,6 @@ class Especialista
     }
 }
 
-public function getPacientesComEspecialistas()
-{
-    try {
-        // Preparar a consulta SQL com o JOIN entre Paciente e Especialista
-        $sql = "SELECT 
-                    p.cpf, 
-                    p.nome AS nome_paciente, 
-                    p.email AS email_paciente, 
-                    p.data_nascimento, 
-                    p.telefone, 
-                    e.nome AS nome_especialista, 
-                    e.email AS email_especialista, 
-                    e.id_especialidade
-                FROM 
-                    Paciente p
-                JOIN 
-                    Especialista e 
-                ON 
-                    p.cip = e.cip";
-        
-        // Preparar e executar a consulta
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
-        
-        // Retornar os resultados
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        // Em caso de erro, log o erro e retorne um array vazio
-        error_log('Erro ao consultar pacientes e especialistas: ' . $e->getMessage());
-        return [];
-    }
-}
 
     
 }

@@ -1,5 +1,5 @@
 <style>
-    /* Estilo do botão de Alterar Conta no topo */
+ 
     .top-bar {
         position: absolute;
         top: 0;
@@ -32,20 +32,20 @@
         color: white;
     }
 
-    /* Estilo para o texto do paciente conectado */
+   
     .patient-connected {
-        color: white; /* Altere a cor do texto conforme necessário */
+        color: white; 
         font-family: 'Poppins', sans-serif;
-        font-size: 12px; /* Ajuste o tamanho da fonte se necessário */
-        margin-right: auto; /* Faz o texto se mover para a esquerda */
-        padding-left: 20px; /* Adiciona um espaço à esquerda do texto */
+        font-size: 12px; 
+        margin-right: auto; 
+        padding-left: 20px; 
     }
 </style>
 
 <body>
     <div class="top-bar">
     <?php
-        // Verifica se a página atual NÃO é telapacienteCod.php ou alterarEspecialista.php
+       
         if (basename($_SERVER['PHP_SELF']) != 'telapacienteCod.php' && basename($_SERVER['PHP_SELF']) != 'alterarEspecialista.php') {
         ?>
             <span class="patient-connected">Paciente Conectado: <?php echo $_SESSION['conectadopaciente'] ?></span>

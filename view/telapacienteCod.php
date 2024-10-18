@@ -6,17 +6,14 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Verifique se há um especialista conectado
 if (!isset($_SESSION['especialistaconectado'])) {
     header('Location: ../view/formlogin.php');
     exit();
 }
 
-// Cria uma nova instância do modelo Paciente
-$pacienteModel = new Paciente();
-$cipEspecialista = $_SESSION['especialistaconectado']; // Supondo que o CIP esteja armazenado na sessão
 
-// Busca os pacientes associados ao especialista
+$pacienteModel = new Paciente();
+$cipEspecialista = $_SESSION['especialistaconectado']; 
 $pacientes = $pacienteModel->buscarPacientesPorEspecialista($cipEspecialista);
 $statusBuscaCodPaciente = isset($_SESSION['statusBuscaCodPaciente']) ? $_SESSION['statusBuscaCodPaciente'] : "";
 ?>
@@ -88,7 +85,6 @@ $statusBuscaCodPaciente = isset($_SESSION['statusBuscaCodPaciente']) ? $_SESSION
     </div>
 
     <?php
-    // Limpa as variáveis da sessão após a exibição
     $_SESSION['statusBuscaCodPaciente'] = "";
     $_SESSION['pacientes'] = [];
     ?>

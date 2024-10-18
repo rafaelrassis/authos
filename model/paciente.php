@@ -53,52 +53,69 @@ class Paciente
         }
     }
 
-    public function atualizaPaciente($cpf, $nome, $senha, $data_nascimento, $telefone, $email, $foto) {
-        // Usa o método conectar() para obter a conexão
+    public function atualizaPaciente($cpf, $nome, $senha, $data_nascimento, $telefone, $email, $foto, $cip) {
         $this->pdo = (new Conexao())->conectar();
     
-        // Primeiro, busque a senha atual do paciente
-        $querySenhaAtual = "SELECT senha FROM paciente WHERE cpf = ?";
-        $stmtSenha = $this->pdo->prepare($querySenhaAtual);
-        $stmtSenha->execute([$cpf]);
-        $senhaAtual = $stmtSenha->fetchColumn();
-    
-        // Inicializa a parte da consulta
-        $query = "UPDATE paciente SET nome = ?, data_nascimento = ?, telefone = ?, email = ?";
+        $query = "UPDATE paciente SET nome = ?, data_nascimento = ?, telefone = ?, email = ?, cip = ?";
         
-        // Inicializa um array para os parâmetros
-        $params = [$nome, $data_nascimento, $telefone, $email];
+        $params = [$nome, $data_nascimento, $telefone, $email, $cip];
     
-        // Adiciona a nova senha se fornecida
-        if ($senha !== null) {
+        if (!empty($senha)) {
             $query .= ", senha = ?";
-            $params[] = $senha; // Adiciona a nova senha
-        } else {
-            // Se a senha não for fornecida, mantém a senha atual
-            // Não precisamos adicionar a senha ao array de parâmetros, pois ela não será usada na atualização
+            $params[] = $senha;
         }
     
-        // Adiciona a foto se fornecida
-        if ($foto !== null) {
+        if (!empty($foto)) {
             $query .= ", foto = ?";
-            $params[] = $foto; // Adiciona a foto
+            $params[] = $foto;
         }
     
-        // Finaliza a consulta
         $query .= " WHERE cpf = ?";
-        $params[] = $cpf; // Adiciona o CPF no final
+        $params[] = $cpf;
     
-        // Verifique o número de parâmetros e o número de tokens
-        $numTokens = substr_count($query, '?'); // Conta quantos ? existem na consulta
-        if (count($params) !== $numTokens) {
-            throw new Exception("Número de parâmetros não corresponde ao número de tokens na consulta. Tokens: $numTokens, Parâmetros: " . count($params));
-        }
-    
-        // Prepara e executa a consulta
         $stmt = $this->pdo->prepare($query);
-        return $stmt->execute($params); // Executa a consulta
+        return $stmt->execute($params);
     }
     
+
+    public function buscarPacientesPorEspecialista($cip) {
+        try {
+            $consulta = $this->pdo->prepare("SELECT cpf, nome, senha, email, foto, data_nascimento, telefone FROM paciente WHERE cip = :cip");
+            $consulta->bindValue(":cip", $cip);
+            $consulta->execute();
+            return $consulta->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log('Erro ao buscar pacientes: ' . $e->getMessage());
+            return [];
+        }
+    }
+    public function obterEspecialistaAtual($cpfPaciente)
+    {
+    try {
+        $consulta = $this->pdo->prepare("
+            SELECT especialista.cip, especialista.nome 
+            FROM paciente 
+            JOIN especialista ON paciente.cip = especialista.cip 
+            WHERE paciente.cpf = :cpf
+        ");
+        $consulta->bindValue(":cpf", $cpfPaciente);
+        $consulta->execute();
+        return $consulta->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erro ao obter o especialista atual: " . $e->getMessage());
+        return false;
+    }
+}
+public function listarEspecialistas()
+{
+    try {
+        $consulta = $this->pdo->query("SELECT cip, nome FROM especialista");
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Erro ao listar especialistas: " . $e->getMessage());
+        return [];
+    }
+}
     
     
 }

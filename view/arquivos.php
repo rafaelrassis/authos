@@ -9,11 +9,9 @@ include('../model/paciente.php');
 
 
 
-// Verifica se o CPF e o código do paciente estão na sessão
 if (isset($_SESSION['pacienteCpf'])) {
     $cpfPaciente = $_SESSION['pacienteCpf']; // Obtém o CPF da sessão
 } else {
-    // Caso os dados não estejam disponíveis, redireciona ou exibe uma mensagem de erro
     header('Location: formlogin.php');
     exit();
 } 
@@ -29,7 +27,6 @@ $paciente = $infPaciente->obterInformacoesPaciente($_SESSION['pacienteCpf']);
 if ($paciente === false) {
     echo "Erro ao obter informações do paciente.";
 } else {
-    // Aqui você pode processar as informações do paciente
  //   var_dump($paciente);
 }
 

@@ -16,16 +16,13 @@ if (isset($_SESSION['statusCadastroEspecialista']) && $_SESSION['statusCadastroE
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro de Especialista</title>
 
-  <!-- Scripts e CSS do Bootstrap -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js"></script>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- jQuery Mask Plugin para aplicar máscaras -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
-  <!-- Custom CSS -->
   <style>
     .gradient-custom-2 {
       background: #335b66;
@@ -45,17 +42,15 @@ if (isset($_SESSION['statusCadastroEspecialista']) && $_SESSION['statusCadastroE
     }
   </style>
 
-  <!-- Aplicar máscaras ao carregar a página -->
   <script>
     $(document).ready(function(){
-      $('#cip').mask('00/000000'); // Máscara para o CIP
-      $('#cpf').mask('000.000.000-00'); // Máscara para o CPF
+      $('#cip').mask('00/000000'); 
+      $('#cpf').mask('000.000.000-00'); 
 
-      // Validação de quantidade de caracteres para CIP
       $('#formEspecialista').on('submit', function(e) {
-        var cip = $('#cip').val().replace(/\D/g, ''); // Remove caracteres não numéricos
-        if (cip.length !== 8) { // Verifica se o CIP tem 8 dígitos
-          e.preventDefault(); // Impede o envio do formulário
+        var cip = $('#cip').val().replace(/\D/g, ''); 
+        if (cip.length !== 8) { 
+          e.preventDefault(); 
           alert('O CIP deve conter 8 dígitos.');
         }
       });
@@ -79,7 +74,6 @@ if (isset($_SESSION['statusCadastroEspecialista']) && $_SESSION['statusCadastroE
                     <br><br>
                   </div>
 
-                  <!-- Formulário -->
                   <form action="../controller/criarespecialista.php" method="POST">
 
                     <div class="form-outline mb-4">
@@ -92,7 +86,6 @@ if (isset($_SESSION['statusCadastroEspecialista']) && $_SESSION['statusCadastroE
                       <label class="form-label" for="nome">Digite o nome</label>
                     </div>
 
-                    <!-- Campo E-mail -->
                     <div class="form-outline mb-4">
                       <input type="email" id="email" name="email" class="form-control" placeholder="email@gmail.com" required/>
                       <label class="form-label" for="email">Digite o e-mail</label>

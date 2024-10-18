@@ -1,4 +1,5 @@
 <?php
+include('../controller/protector.php');
 session_start();
 require_once '../model/especialista.php';
 include('../controller/protector.php');
@@ -7,9 +8,8 @@ $cip = $_SESSION['especialistaconectado'];
 
 $_SESSION['statusAlteracaoEspecialista'] = isset($_SESSION['statusAlteracaoEspecialista']) ? $_SESSION['statusAlteracaoEspecialista'] : "";
 
-// Recupera os dados do especialista para pré-preencher o formulário
 $especialista = new Especialista();
-$dadosEspecialista = $especialista->consultaEspecialistaPorCIP($cip); // Assumindo que você tem um método para buscar pelo CIP
+$dadosEspecialista = $especialista->consultaEspecialistaPorCIP($cip); 
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -18,30 +18,27 @@ $dadosEspecialista = $especialista->consultaEspecialistaPorCIP($cip); // Assumin
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alteração de Especialista</title>
 
-  <!-- Scripts e CSS do Bootstrap -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js"></script>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- jQuery Mask Plugin para aplicar máscaras -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
-  <!-- Custom CSS -->
   <style>
-    /* Gradiente de fundo */
+ 
     .gradient-custom-2 {
       background: linear-gradient(to right, #307c91, #335b66);
     }
 
-    /* Altura total em telas grandes */
+
     @media (min-width: 768px) {
       .gradient-form {
         height: 100%; 
       }
     }
 
-    /* Bordas arredondadas */
+   
     @media (min-width: 769px) {
       .gradient-custom-2 {
         border-top-right-radius: .3rem;
@@ -49,19 +46,16 @@ $dadosEspecialista = $especialista->consultaEspecialistaPorCIP($cip); // Assumin
       }
     }
 
-    /* Estilo do formulário */
     .form-outline {
       margin-bottom: 1rem; 
     }
 
-    /* Estilo do botão */
     .btn-outline-dark, .btn-voltar {
       width: 100%; 
       padding: 0.5rem; 
-      margin-top: 1rem; /* Espaço acima do botão */
+      margin-top: 1rem; 
     }
 
-    /* Centralização */
     .centralizado {
       display: flex;
       justify-content: center;
@@ -69,21 +63,20 @@ $dadosEspecialista = $especialista->consultaEspecialistaPorCIP($cip); // Assumin
       height: 100%; 
     }
 
-    /* Estilo para alertas */
+
     .alert {
       margin-bottom: 20px; 
-      margin-top: 20px; /* Adicione uma margem superior */
-      z-index: 1000; /* Garanta que o alerta esteja acima de outros elementos */
+      margin-top: 20px; 
+      z-index: 1000; 
     }
 
-    /* Títulos e textos do formulário */
     .text-center img {
       width: 185px; 
     }
 
     .card-body h4 {
       margin-top: 1rem; 
-      margin-bottom: 2rem; /* Maior espaçamento abaixo do título */
+      margin-bottom: 2rem; 
     }
   </style>
 

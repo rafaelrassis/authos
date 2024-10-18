@@ -1,12 +1,11 @@
 <?php
-require_once '../model/Anotacao.php'; // Certifique-se de incluir o model Anotacao
+require_once '../model/Anotacao.php'; 
 
 class AnotacaoController {
     private $anotacaoModel;
 
     public function __construct($conexao) {
-        $this->anotacaoModel = new Anotacao($conexao); // Inicializando o modelo
-    }
+        $this->anotacaoModel = new Anotacao($conexao); 
 
     public function criarAnotacao($titulo, $conteudo) {
         if (!isset($_SESSION['especialistaconectado'])) {
@@ -20,7 +19,7 @@ class AnotacaoController {
     }
     public function listarAnotacoes() {
         if (!isset($_SESSION['pacienteCpf'])) {
-            return []; // Retorna um array vazio se não houver paciente
+            return []; 
         }
         
         return $this->anotacaoModel->listarAnotacoesPorCpf($_SESSION['pacienteCpf']);
@@ -28,14 +27,13 @@ class AnotacaoController {
 
     public function deletarAnotacao($id) {
         if (!isset($_SESSION['especialistaconectado'])) {
-            return false; // Retorna falso se não houver especialista
+            return false; 
         }
 
         return $this->anotacaoModel->deletarAnotacao($id);
     }
 }
 
-// Lógica para processar a exclusão via AJAX
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
     $conexao = new Conexao();
     $controller = new AnotacaoController($conexao);

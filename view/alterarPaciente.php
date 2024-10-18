@@ -1,11 +1,15 @@
 <?php
+include('../controller/protector.php');
+require_once '../model/conexao.php';
+require_once '../model/paciente.php';
+require_once '../model/especialista.php';
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 $_SESSION['statusAlteracaoPaciente'] = $_SESSION['statusAlteracaoPaciente'] ?? "";
 
-// Recupera o CPF do paciente a ser alterado a partir da sessão
 $cpfPaciente = $_SESSION['conectadopaciente'] ?? '';
 
 if (!empty($_SESSION['statusAlteracaoPaciente'])) {
@@ -13,12 +17,17 @@ if (!empty($_SESSION['statusAlteracaoPaciente'])) {
     unset($_SESSION['statusAlteracaoPaciente']);
 }
 
-// Recuperar informações do paciente
-require_once '../model/conexao.php';
-require_once '../model/paciente.php';
+
+
+
+
 
 $pacienteModel = new Paciente();
 $pacienteInfo = $pacienteModel->obterInformacoesPaciente($cpfPaciente);
+
+
+$especialistaModel = new Especialista();
+$especialistaInfo = $especialistaModel->consultaEspecialistas();
 ?>
 
 <!DOCTYPE html>
@@ -33,35 +42,61 @@ $pacienteInfo = $pacienteModel->obterInformacoesPaciente($cpfPaciente);
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <style>
-        .gradient-custom-2 {
-            background: linear-gradient(to right, #307c91, #335b66);
+      body {
+    background-color: #335b66;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    padding-top: 60px; 
+}
+
+        .container {
+    background-color: #DADADA;
+    width: 80%;
+    max-width: 1200px;
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 10px; 
+    position: relative; 
+}
+
+        h2, h3 {
+            text-align: center; 
         }
-        @media (min-width: 768px) {
-            .gradient-form {
-                height: 100vh;
-            }
+
+        .form-control, .btn {
+            border-radius: 10px; 
         }
-        .form-container {
-            display: flex;
-            align-items: center;
+
+        .table {
+            background-color: white; 
         }
-        .form-container img {
-            max-width: 100%; /* Ajusta a imagem ao tamanho do contêiner */
-            height: auto;    /* Mantém a proporção da imagem */
+
+        .table th {
+            background-color: #335b66; 
+            color: white; 
         }
+
+        .alert {
+            margin-bottom: 20px; 
+        }
+
+        .delete-note {
+            background-color: red; 
+            color: white; 
+        }
+
     </style>
 
     <script>
         $(document).ready(function(){
             $('#cpf').mask('000.000.000-00');
-            $('#telefone').mask('(00) 00000-0000'); // Máscara para telefone
-        });
+            $('#telefone').mask('(00) 00000-0000'); 
     </script>
 </head>
 <body>
 <?php include 'menuPaciente.php'; ?>
 <section class="h-100 gradient-form" style="background-color: #335b66;">
-    <div class="container py-5 h-100">
+  
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-xl-10">
                 <div class="card rounded-3 text-black">
@@ -111,25 +146,20 @@ $pacienteInfo = $pacienteModel->obterInformacoesPaciente($cpfPaciente);
                                         <label class="form-label" for="foto">Escolha uma nova foto (opcional)</label>
                                     </div>
 
-                                    <div class="form-outline mb-4">
-                            <label class="form-label" for="especialista">Selecione um especialista</label>
-                            <select id="especialista" name="especialista" class="form-control" required>
-                                <option value="">Escolha um especialista</option>
-                                <?php
-                                // Recuperar especialistas
-                                require_once '../model/especialista.php'; // Inclua o arquivo do modelo de especialista
-                                $especialistaModel = new Especialista();
-                                $especialistas = $especialistaModel->getPacientesComEspecialistas();
-
-                                // Loop pelos especialistas e gerar as opções
-                                foreach ($especialistas as $esp) {
-                                    $selected = $esp['id_especialidade'] == $pacienteInfo['cip'] ? 'selected' : '';
-                                    echo "<option value=\"{$esp['id_especialidade']}\">{$esp['nome_especialista']}</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-
+                                   
+                  <div class="form-outline">
+                    <select id="cip" name="cip" class="form-control" >
+                      <option value="" disabled>Selecione uma especialidade</option>
+                      <?php
+                    $especialistaInfo = $especialistaModel->consultaEspecialistas();
+                      foreach ($especialistaInfo as $esp) {
+                        $selected = $esp['cip'] == $pacienteInfo['cip'] ? 'selected' : '';
+                        echo "<option value='{$esp['cip']}' $selected>{$esp['nome']}</option>";
+                      }
+                      ?>
+                    </select>
+                    <label class="form-label" for="especialidade">Especialidade</label>
+                  </div>
 
                                     <div>
                                         <button type="submit" class="btn btn-outline-dark">Alterar</button>
@@ -138,17 +168,19 @@ $pacienteInfo = $pacienteModel->obterInformacoesPaciente($cpfPaciente);
 
                             </div>
                         </div>  
+                        <div class="col-lg-6 d-none d-lg-block"> 
+    <div class="text-center">
+        <img id="preview-image" src="<?php echo htmlspecialchars($pacienteInfo['foto']); ?>" alt="Foto paciente" style="width: 600px; height: 400px;" />
+        <br>
+        <label class="form-label" for="email">Imagem atual</label>
+    </div>
+</div>
 
-                        <div class="col-lg-6 d-none d-lg-block"> <!-- Coluna para a imagem -->
-                            <div class="text-center">
-                                <img id="preview-image" src="<?php echo htmlspecialchars($pacienteInfo['foto']); ?>" alt="Foto paciente" />
-                                <label class="form-label" for="email">Imagem atual</label>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        
     </div>
 </section>
 

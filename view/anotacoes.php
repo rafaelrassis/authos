@@ -1,26 +1,25 @@
 <?php
+include('../controller/protector.php');
 require_once '../model/conexao.php';  
 require_once '../controller/AnotacaoController.php';
 
-include('../controller/protector.php');
+
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Verifica se há uma mensagem de status
 if (isset($_SESSION['statusAnotacao']) && $_SESSION['statusAnotacao'] !== "") {
     echo "<div class='alert alert-warning'>{$_SESSION['statusAnotacao']}</div>";
-    unset($_SESSION['statusAnotacao']); // Limpa a mensagem após exibição
+    unset($_SESSION['statusAnotacao']); 
 }
 
-$conexao = new Conexao(); // Cria a conexão aqui
-$controller = new AnotacaoController($conexao); // Passa a conexão ao controller
-
+$conexao = new Conexao(); 
+$controller = new AnotacaoController($conexao); 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['titulo'], $_POST['conteudo'])) {
     $controller->criarAnotacao($_POST['titulo'], $_POST['conteudo']);
-    header('Location: anotacoes.php'); // Redireciona para evitar reenvios de formulário
-    exit; // Encerra a execução do script
+    header('Location: anotacoes.php'); 
+    exit; 
 }
 
 $anotacoes = $controller->listarAnotacoes();
@@ -39,7 +38,7 @@ $anotacoes = $controller->listarAnotacoes();
     background-color: #335b66;
     font-family: 'Poppins', sans-serif;
     color: #333;
-    padding-top: 60px; /* Adiciona espaço suficiente para o menu */
+    padding-top: 60px; 
 }
 
         .container {
@@ -48,34 +47,34 @@ $anotacoes = $controller->listarAnotacoes();
     max-width: 1200px;
     padding: 20px;
     border-radius: 20px;
-    margin-top: 10px; /* Aumente a margem superior para evitar que o menu cubra */
-    position: relative; /* Define a posição como relativa */
+    margin-top: 10px; 
+    position: relative; 
 }
 
         h2, h3 {
-            text-align: center; /* Centraliza os títulos */
+            text-align: center; 
         }
 
         .form-control, .btn {
-            border-radius: 10px; /* Bordas arredondadas para inputs e botões */
+            border-radius: 10px; 
         }
 
         .table {
-            background-color: white; /* Fundo da tabela */
+            background-color: white; 
         }
 
         .table th {
-            background-color: #335b66; /* Cor do cabeçalho da tabela */
-            color: white; /* Cor do texto do cabeçalho */
+            background-color: #335b66; 
+            color: white;
         }
 
         .alert {
-            margin-bottom: 20px; /* Espaçamento inferior para alertas */
+            margin-bottom: 20px; 
         }
 
         .delete-note {
-            background-color: red; /* Cor do botão de excluir */
-            color: white; /* Cor do texto */
+            background-color: red;
+            color: white; 
         }
     </style>
 
@@ -86,7 +85,7 @@ $anotacoes = $controller->listarAnotacoes();
     <div class="container">
         <h2>Anotações</h2>
 
-        <!-- Formulário para adicionar nova anotação -->
+       
         <form method="POST">
             <div class="form-group">
                 <label for="titulo">Título:</label>
@@ -99,7 +98,6 @@ $anotacoes = $controller->listarAnotacoes();
             <button type="submit" class="btn btn-success">Salvar Nota</button>
         </form>
 
-        <!-- Tabela de anotações -->
         <h3 class="mt-4">Anotações Cadastradas</h3>
         <table class="table table-bordered">
             <thead>
@@ -139,7 +137,7 @@ $anotacoes = $controller->listarAnotacoes();
                     type: 'POST',
                     data: { 'action': 'delete', 'id': id },
                     success: function(response) {
-                        location.reload();  // Recarregar a página para atualizar a tabela
+                        location.reload(); 
                     }
                 });
             }

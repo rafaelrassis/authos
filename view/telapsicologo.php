@@ -153,13 +153,13 @@ if (isset($_SESSION['pacienteCpf']) && isset($_SESSION['pacienteCod'])) {
                 <a href="arquivos.php">
                     <img src="img/arq.png" alt="Arquivos paciente"> Arquivos do paciente
                 </a>
-                <a href="atividades.html">
+                <a href="avaliacao.php">
                     <img src="img/atv.png" alt="Atividades"> Atividades
                 </a>
                 <a href="anotacoes.php">
                     <img src="img/nota.png" alt="Anotações"> Anotações
                 </a>
-                <a href="analise.html">
+                <a href="analise.php">
                     <img src="img/anls.png" alt="Analise"> Analise
                 </a>
             </div>

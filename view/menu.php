@@ -6,7 +6,7 @@
         width: 100%;
         display: flex;
         justify-content: flex-end;
-        padding: 10px 20px;
+        padding: 20px 30px;
         background-color: #307c91;
         z-index: 10; 
     }
@@ -47,7 +47,8 @@
       
         if (basename($_SERVER['PHP_SELF']) != 'telapacienteCod.php' && basename($_SERVER['PHP_SELF']) != 'alterarEspecialista.php') {
         ?>
-            <span class="patient-connected">Paciente Conectado: <?php echo $_SESSION['pacienteCpf'] ?></span>
+            <span class="patient-connected">Paciente Conectado: <?php echo $_SESSION['conectadopaciente'] ?></span>
+            
         <?php
         }
         ?>

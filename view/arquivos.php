@@ -1,11 +1,12 @@
 <?php
 
-include('../controller/protector.php');
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 include('../model/paciente.php');
+
+include('../controller/protector.php');
+
 
 
 

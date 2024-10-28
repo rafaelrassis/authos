@@ -1,0 +1,100 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    background-color: #2A5D66;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: 'Fredoka One', sans-serif;
+    color: #FFDD44;
+    font-weight: bold;
+    font-size: 2.5em;
+    margin-top: 10px;
+}
+
+#telaInicial {
+    text-align: center;
+    background-color: #1f95b9;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+input {
+    margin: 10px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#areaDeJogo {
+    width: 90%;
+    height: 60vh; /* Ajusta a altura para 60% da altura da tela */
+    border: 4px dashed #ffffff;
+    position: relative;
+    margin: 20px auto;
+    overflow: hidden;
+    background-image: url('img/fundo6.png');
+    background-size: cover;
+    border-radius: 15px;
+}
+
+.peixe, .lixo {
+    width: 90px;
+    height: 90px;
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: aparecer 0.5s ease forwards;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    cursor: pointer;
+}
+
+.peixe {
+    background-image: url('img/peixeD.png');
+    transform: rotate(5deg);
+}
+
+.lixo {
+    background-image: url('img/lixo.png');
+    animation: balancar 1s ease-in-out infinite;
+}
+
+.peixe:hover, .lixo:hover {
+    transform: scale(1.1) rotate(0deg);
+}
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes balancar {
+    0%, 100% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+}
+
+#botaoIniciar {
+    background-color: #FFAA33;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+#botaoIniciar:hover {
+    background-color: #ff9933;
+}
+
+#pontuacao, #tempoRestante {
+    font-size: 1.5em;
+    margin-top: 10px;
+    color: #ffffff;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    width: auto;
+}

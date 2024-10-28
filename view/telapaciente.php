@@ -99,7 +99,7 @@ include('../controller/protector.php');
             <div class="textoUm">Área paciente</div>
             <div class="link-container">
            
-                <a href="atividades.html">
+                <a href="avaliacaoPaciente.php">
                     <img src="img/atv.png" alt="Atividades"> Atividades
                 </a>
                

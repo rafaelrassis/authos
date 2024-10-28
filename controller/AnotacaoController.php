@@ -6,6 +6,7 @@ class AnotacaoController {
 
     public function __construct($conexao) {
         $this->anotacaoModel = new Anotacao($conexao); 
+    } // Fechamento do construtor
 
     public function criarAnotacao($titulo, $conteudo) {
         if (!isset($_SESSION['especialistaconectado'])) {
@@ -13,10 +14,10 @@ class AnotacaoController {
             return;
         }
     
-      
         $success = $this->anotacaoModel->criarAnotacao($titulo, $conteudo, $_SESSION['pacienteCpf'], $_SESSION['especialistaconectado']);
         $_SESSION['statusAnotacao'] = $success ? "Anotação criada com sucesso!" : "Erro ao criar anotação.";
     }
+
     public function listarAnotacoes() {
         if (!isset($_SESSION['pacienteCpf'])) {
             return []; 

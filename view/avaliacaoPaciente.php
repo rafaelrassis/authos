@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_avaliacao'])) {
 }
 
 $avaliacoes = $avaliacaoController->listarAvaliacoesPendentes($cpf);
+$jogosPendentes = $avaliacaoController->listarJogosPendentes($cpf);
 ?>
 
 <!DOCTYPE html>
@@ -60,6 +61,47 @@ $avaliacoes = $avaliacaoController->listarAvaliacoesPendentes($cpf);
                                 <img src="img/logo.png" style="width: 185px;" alt="logo">
                                 <h4 class="mt-1 mb-4">Avaliações Pendentes</h4>
                             </div>
+                            <h4 class="mt-4">Jogos Pendentes</h4>
+                            <table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Status</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (!empty($jogosPendentes)): ?>
+            <?php foreach ($jogosPendentes as $jogo): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($jogo['id_avaliacao']); ?></td>
+                    <td><?php echo htmlspecialchars($jogo['nome']); ?></td>
+                    <td><?php echo htmlspecialchars($jogo['status']); ?></td>
+                    <td>
+                        <?php
+                        // Definindo o link baseado no nome do jogo
+                        $link = '#'; // Link padrão, caso não haja uma correspondência
+                        if ($jogo['nome'] === 'Pescaria') {
+                            $link = '../jogos/pescaria/pescaria.php';
+                        } elseif ($jogo['nome'] === 'outro') {
+                            $link = 'jogos/pescaria/teste.php';
+                        }
+
+                        // Armazenando o ID do jogo na sessão
+                        $_SESSION['numeroJogo'] = $jogo['id_avaliacao'];
+                        ?> 
+                        <a href="<?php echo $link; ?>" class="btn btn-primary">Acessar Jogo</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr><td colspan="4" class="text-center">Nenhum jogo pendente encontrado.</td></tr>
+        <?php endif; ?>
+    </tbody>
+</table>
+
+
 
                             <!-- Tabela de Avaliações -->
                             <table class="table table-bordered">

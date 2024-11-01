@@ -58,11 +58,11 @@
             <button type="submit" class="btn-top">Menu</button>
         </form>
 
-        <form action="../view/alterarPaciente.php" method="GET" class="top-bar-form">
+        <form action="../../view/alterarPaciente.php" method="GET" class="top-bar-form">
             <button type="submit" class="btn-top">Alterar Conta Paciente</button>
         </form>
 
-        <form action="../controller/logout.php" method="POST" class="top-bar-form">
+        <form action="../../controller/logout.php" method="POST" class="top-bar-form">
             <button type="submit" class="btn-top btn-sair">Sair</button>
         </form>
     </div>

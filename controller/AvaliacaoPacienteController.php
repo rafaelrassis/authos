@@ -15,4 +15,11 @@ class AvaliacaoController {
     public function finalizarAvaliacao($idAvaliacao) {
         return $this->avaliacaoModel->finalizarAvaliacao($idAvaliacao);
     }
+    public function listarJogosPendentes($cpf) {
+        return $this->avaliacaoModel->listarJogosPendentes($cpf);
+    }
+
 }
+
+
+?>

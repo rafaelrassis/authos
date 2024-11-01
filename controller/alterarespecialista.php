@@ -1,5 +1,5 @@
 <?php
-require_once '../model/especialista.php';
+require_once '../model/avaliacao.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

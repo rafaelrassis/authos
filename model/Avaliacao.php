@@ -40,8 +40,11 @@ class Avaliacao {
             return false;
         }
     }    
-}    
+    
 
 
+    
+
+}
 
 ?>

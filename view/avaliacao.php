@@ -51,11 +51,12 @@ $especialista = new Especialista();
         }
 
         .alert {
-    margin: 0; /* Remover margens */
-    padding: 10px; /* Ajustar o padding se necessário */
-    z-index: 1000; 
-    position: relative; 
-}
+            margin: 0;
+            padding: 10px;
+            z-index: 1000; 
+            position: relative; 
+        }
+
         .card-body h4 {
             margin-top: 1rem; 
             margin-bottom: 2rem; 
@@ -68,17 +69,27 @@ $especialista = new Especialista();
             const jogoFields = document.getElementById("jogoFields");
             const tarefaFields = document.getElementById("tarefaFields");
             const commonFields = document.getElementById("commonFields");
+            const nomeInput = document.getElementById("nome");
+            const nomeSelect = document.getElementById("nomeSelect");
             const submitBtn = document.getElementById("submitBtn");
 
             if (tipo === "jogo") {
                 jogoFields.classList.remove("hidden");
                 tarefaFields.classList.add("hidden");
                 commonFields.classList.remove("hidden");
+                nomeInput.classList.add("hidden"); // Esconde o input de nome
+                nomeInput.removeAttribute("required"); // Remove required do input de nome
+                nomeSelect.classList.remove("hidden"); // Mostra o select de nome
+                nomeSelect.setAttribute("required", "required"); // Adiciona required ao select de nome
                 submitBtn.classList.remove("hidden");
             } else if (tipo === "tarefa") {
                 tarefaFields.classList.remove("hidden");
                 jogoFields.classList.add("hidden");
                 commonFields.classList.remove("hidden");
+                nomeInput.classList.remove("hidden"); // Mostra o input de nome
+                nomeInput.setAttribute("required", "required"); // Adiciona required ao input de nome
+                nomeSelect.classList.add("hidden"); // Esconde o select de nome
+                nomeSelect.removeAttribute("required"); // Remove required do select de nome
                 submitBtn.classList.remove("hidden");
             } else {
                 jogoFields.classList.add("hidden");
@@ -95,10 +106,8 @@ $especialista = new Especialista();
         <?php include 'menu.php'; ?>
 
         <div class="container py-5 h-100">
-            <div class="row d-flex justify-content-center align-items-start h-100"> <!-- Mudado para align-items-start -->
+            <div class="row d-flex justify-content-center align-items-start h-100">
                 <div class="col-xl-8"> 
-
-                    <!-- Verifica se há mensagens de alerta e exibe -->
                     <?php if (!empty($_SESSION['statusCadastroAvaliacao'])): ?>
                         <div class='alert alert-warning text-center'><?php echo $_SESSION['statusCadastroAvaliacao']; ?></div>
                         <?php unset($_SESSION['statusCadastroAvaliacao']); ?>
@@ -129,6 +138,13 @@ $especialista = new Especialista();
                                         <div class="form-outline">
                                             <label for="nome">Nome:</label>
                                             <input type="text" id="nome" name="nome" class="form-control" required>
+
+                                            <!-- Select de Nome para Jogos -->
+                                            <select id="nomeSelect" name="nome" class="form-control hidden">
+                                                <option value="">Selecione o jogo</option>
+                                                <option value="Pescaria">Pescaria</option>
+                                              
+                                            </select>
                                         </div>
 
                                         <div class="form-outline">
@@ -153,7 +169,6 @@ $especialista = new Especialista();
                                     <!-- Botão de Envio -->
                                     <button type="submit" id="submitBtn" class="btn btn-outline-dark hidden">Salvar Avaliação</button>
                                 </form>
-
                             </div>
                         </div>
                     </div>
@@ -164,6 +179,7 @@ $especialista = new Especialista();
 </body>
 
 </html>
+
 <?php
 $_SESSION['statusCadastroAvaliacao'] = "";
 ?>

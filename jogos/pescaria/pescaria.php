@@ -1,3 +1,15 @@
+<?php
+session_start(); // Inicia a sessão
+
+date_default_timezone_set('America/Sao_Paulo');
+$_SESSION['dataHoraEntrada'] = date('Y-m-d H:i:s');
+
+// Exibe a data e hora de entrada
+echo "Você entrou na página em: " . $_SESSION['dataHoraEntrada'];
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -10,10 +22,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
 </head>
 <body class="bg-info text-center text-light">
+    <?php include '../../view/menuPaciente.php'; ?>
+    
+    <!-- Botão fechar alinhado à direita e com margem superior -->
+    <div class="container d-flex justify-content-end mt-4">
+        <button id="botaoFechar" class="btn btn-danger">Fechar</button>
+    </div>
+    
     <div class="container mt-5">
         <header>
             <h1 class="display-4">Escolha as Opções do Jogo</h1>
         </header>
+
+
+        <div>
+    <p><strong>Número do Jogo:</strong> <?php echo $_SESSION['numeroJogo']; ?></p>
+    <p><strong>Data e Hora de Entrada:</strong> <?php echo $_SESSION['dataHoraEntrada']; ?></p>
+    <p><strong>CPF do Paciente:</strong> <?php echo $_SESSION['conectadopaciente']; ?></p>
+</div>
 
         <div id="telaInicial" class="mb-4">
             <label for="lixoEscolhidos" class="h5">Quantidade de Lixo a Coletar:</label>
@@ -22,7 +48,7 @@
         </div>
 
         <div id="areaDeJogo" style="display:none;">
-            <!-- Área onde os lixos e peixes aparecerão -->
+            <button id="botaoDesistir" class="btn btn-danger" style="position:absolute; top: 10px; right: 10px;">Desistir</button>
         </div>
 
         <div id="resultado" style="display:none;">
@@ -37,5 +63,12 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Evento para o botão fechar
+        document.getElementById('botaoFechar').addEventListener('click', function() {
+            // Redireciona para a página desejada após finalizar a avaliação
+            window.location.href = '../../controller/jogosController.php'; // Altere para a URL desejada
+        });
+    </script>
 </body>
 </html>

@@ -71,27 +71,43 @@ $especialista = new Especialista();
             const commonFields = document.getElementById("commonFields");
             const nomeInput = document.getElementById("nome");
             const nomeSelect = document.getElementById("nomeSelect");
+            const descricaoInput = document.getElementById("descricao");
             const submitBtn = document.getElementById("submitBtn");
 
             if (tipo === "jogo") {
+                // Mostrar campos para "Jogo"
                 jogoFields.classList.remove("hidden");
                 tarefaFields.classList.add("hidden");
                 commonFields.classList.remove("hidden");
-                nomeInput.classList.add("hidden"); // Esconde o input de nome
-                nomeInput.removeAttribute("required"); // Remove required do input de nome
-                nomeSelect.classList.remove("hidden"); // Mostra o select de nome
-                nomeSelect.setAttribute("required", "required"); // Adiciona required ao select de nome
+
+                // Configurar campos para "Jogo"
+                nomeInput.classList.add("hidden");
+                nomeInput.removeAttribute("required");
+                nomeSelect.classList.remove("hidden");
+                nomeSelect.setAttribute("required", "required");
+
+                // Remover required do campo "Descrição"
+                descricaoInput.removeAttribute("required");
                 submitBtn.classList.remove("hidden");
+
             } else if (tipo === "tarefa") {
+                // Mostrar campos para "Tarefa"
                 tarefaFields.classList.remove("hidden");
                 jogoFields.classList.add("hidden");
                 commonFields.classList.remove("hidden");
-                nomeInput.classList.remove("hidden"); // Mostra o input de nome
-                nomeInput.setAttribute("required", "required"); // Adiciona required ao input de nome
-                nomeSelect.classList.add("hidden"); // Esconde o select de nome
-                nomeSelect.removeAttribute("required"); // Remove required do select de nome
+
+                // Configurar campos para "Tarefa"
+                nomeInput.classList.remove("hidden");
+                nomeInput.setAttribute("required", "required");
+                nomeSelect.classList.add("hidden");
+                nomeSelect.removeAttribute("required");
+
+                // Adicionar required ao campo "Descrição"
+                descricaoInput.setAttribute("required", "required");
                 submitBtn.classList.remove("hidden");
+
             } else {
+                // Esconder todos os campos quando nada estiver selecionado
                 jogoFields.classList.add("hidden");
                 tarefaFields.classList.add("hidden");
                 commonFields.classList.add("hidden");
@@ -108,11 +124,6 @@ $especialista = new Especialista();
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-start h-100">
                 <div class="col-xl-8"> 
-                    <?php if (!empty($_SESSION['statusCadastroAvaliacao'])): ?>
-                        <div class='alert alert-warning text-center'><?php echo $_SESSION['statusCadastroAvaliacao']; ?></div>
-                        <?php unset($_SESSION['statusCadastroAvaliacao']); ?>
-                    <?php endif; ?>
-
                     <div class="card rounded-3 text-black">
                         <div class="row g-0">
                             <div class="card-body p-md-5 mx-md-4">
@@ -140,10 +151,12 @@ $especialista = new Especialista();
                                             <input type="text" id="nome" name="nome" class="form-control" required>
 
                                             <!-- Select de Nome para Jogos -->
-                                            <select id="nomeSelect" name="nome" class="form-control hidden">
+                                            <select id="nomeSelect" name="nomeSelect" class="form-control hidden">
                                                 <option value="">Selecione o jogo</option>
+                                                <option value="7erro">7erro</option>
+                                                <option value="Jogo tcc Ana">Jogo tcc Ana</option>
+                                                <option value="Memoria">Memoria</option>
                                                 <option value="Pescaria">Pescaria</option>
-                                              
                                             </select>
                                         </div>
 

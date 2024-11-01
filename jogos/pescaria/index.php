@@ -1,15 +1,14 @@
 <?php
-session_start(); // Inicia a sessão
-
+session_start(); // Adicione esta linha
 date_default_timezone_set('America/Sao_Paulo');
+
+// Atualiza a data e hora de entrada na sessão sempre que a página for carregada
 $_SESSION['dataHoraEntrada'] = date('Y-m-d H:i:s');
 
-// Exibe a data e hora de entrada
-echo "Você entrou na página em: " . $_SESSION['dataHoraEntrada'];
+
 
 
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -21,54 +20,46 @@ echo "Você entrou na página em: " . $_SESSION['dataHoraEntrada'];
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
 </head>
-<body class="bg-info text-center text-light">
-    <?php include '../../view/menuPaciente.php'; ?>
-    
-    <!-- Botão fechar alinhado à direita e com margem superior -->
-    <div class="container d-flex justify-content-end mt-4">
-        <button id="botaoFechar" class="btn btn-danger">Fechar</button>
-    </div>
-    
+<body class=" text-center text-light">
     <div class="container mt-5">
         <header>
-            <h1 class="display-4">Escolha as Opções do Jogo</h1>
-        </header>
+            <!-- <img src="img/titulo.png"></header> -->
+            <h1>Recolha os Lixos</h1>
+        </header> 
 
-
-        <div>
-    <p><strong>Número do Jogo:</strong> <?php echo $_SESSION['numeroJogo']; ?></p>
-    <p><strong>Data e Hora de Entrada:</strong> <?php echo $_SESSION['dataHoraEntrada']; ?></p>
-    <p><strong>CPF do Paciente:</strong> <?php echo $_SESSION['conectadopaciente']; ?></p>
-</div>
-
-        <div id="telaInicial" class="mb-4">
+        <div id="telaInicial" style="background-color: #1f95b9;" class="mb-4">
+            <br>
             <label for="lixoEscolhidos" class="h5">Quantidade de Lixo a Coletar:</label>
             <input type="number" id="lixoEscolhidos" min="1" max="50" value="10" placeholder="10" class="form-control mb-3">
             <button id="botaoIniciar" class="btn btn-warning btn-lg">Iniciar Jogo</button>
         </div>
 
         <div id="areaDeJogo" style="display:none;">
-            <button id="botaoDesistir" class="btn btn-danger" style="position:absolute; top: 10px; right: 10px;">Desistir</button>
+            
         </div>
 
+        <button id="botaoDesistir" class="btn btn-danger" style="position: absolute; top: 10px; right: 10px;">
+            Desistir
+        </button>
+        
+        <!-- Botão Fechar -->
+        <form method="POST" action="/authos/jogos/fechar_jogo.php" style="position: absolute; top: 10px; left: 10px;">
+            <button type="submit" class="btn btn-secondary">
+                Fechar Jogo
+            </button>
+        </form>
+
         <div id="resultado" style="display:none;">
+            
             <h2 id="mensagemResultado" class="h4"></h2>
             <h3 id="quantidadeLixoColetado" class="h5"></h3>
-            <button id="botaoReiniciar" type="button" class="btn btn-success btn-lg">Voltar ao Jogo</button>
+            <button id="botaoVoltarJogo" type="button" class="btn btn-success btn-lg">Voltar ao Jogo</button>
             <button id="botaoTelaInicial" type="button" class="btn btn-secondary btn-lg">Retornar à Tela de Escolhas</button>
         </div>
 
         <div id="pontuacao" aria-live="polite" style="display:none;">Pontuação: 0</div>
         <div id="tempoRestante" aria-live="polite" style="display:none;">Tempo: 60</div>
     </div>
-
     <script src="script.js"></script>
-    <script>
-        // Evento para o botão fechar
-        document.getElementById('botaoFechar').addEventListener('click', function() {
-            // Redireciona para a página desejada após finalizar a avaliação
-            window.location.href = '../../controller/jogosController.php'; // Altere para a URL desejada
-        });
-    </script>
 </body>
 </html>

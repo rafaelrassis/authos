@@ -3,6 +3,7 @@ session_start();
 include('../controller/protector.php');
 require_once ('../controller/AvaliacaoPacienteController.php');
 
+
 $cpf = $_SESSION['conectadopaciente'];
 $avaliacaoController = new AvaliacaoController();
 
@@ -83,10 +84,20 @@ $jogosPendentes = $avaliacaoController->listarJogosPendentes($cpf);
                         // Definindo o link baseado no nome do jogo
                         $link = '#'; // Link padrão, caso não haja uma correspondência
                         if ($jogo['nome'] === 'Pescaria') {
-                            $link = '../jogos/pescaria/pescaria.php';
-                        } elseif ($jogo['nome'] === 'outro') {
-                            $link = 'jogos/pescaria/teste.php';
+                            $link = '../jogos/pescaria/index.php';
+                        } 
+                        elseif ($jogo['nome'] === 'Memoria') {
+                            $link = '../jogos/memoria/index.html';
                         }
+                         elseif ($jogo['nome'] === 'Jogo tcc Ana') {
+                        $link = '../jogos/Jogo tcc Ana/index.html';
+                        } 
+                        elseif ($jogo['nome'] === '7erro') {
+                         $link = '../jogos/7erro/jogo2.html';
+                        }
+                         
+                        
+
 
                         // Armazenando o ID do jogo na sessão
                         $_SESSION['numeroJogo'] = $jogo['id_avaliacao'];

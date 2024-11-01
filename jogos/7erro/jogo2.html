@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo dos 7 Erros</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #295c64;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1, p {
+            color: white;
+        }
+
+        .status, .status p, .status span {
+            color: white;
+        }
+
+        .game-container {
+            background: linear-gradient(to right, #307c91, #335b66);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+
+        .images {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .image {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .image img {
+            max-width: 400px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .hint-button, .pause-button, .start-button, .quit-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #a2d9ce;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .hint-button:disabled, .pause-button:disabled, .start-button:disabled, .quit-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        #hint-message, #timer {
+            margin-top: 10px;
+            font-size: 16px;
+            color: white;
+        }
+
+        .error-mark {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 0, 0, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            border: 2px solid red;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>JOGO DOS SETE ERROS</h1>
+        <p>ENCONTRE AS 7 DIFERENÇAS NAS SEGUINTES IMAGENS:</p>
+        <div class="images">
+            <div class="image" id="image1">
+                <img src="img/1.png" alt="Imagem 1">
+            </div>
+            <div class="image" id="image2">
+                <img src="img/2.png" alt="Imagem 2">
+            </div>
+        </div>
+        <div class="status">
+            <p>ERROS ENCONTRADOS: <span id="erros">0</span>/7</p>
+            <p id="timer">Tempo: <span id="timer-value">0</span> segundos</p>
+            <button class="start-button" id="start-button">Iniciar</button>
+            <button class="pause-button" id="pause-button" disabled>Pausar</button>
+            <button class="hint-button" id="hint-button" disabled>Dica (3 restantes)</button>
+            <button class="quit-button" id="quit-button" disabled>Desistir</button>
+            <p id="hint-message"></p>
+            <p id="start-time"></p>
+            <p id="end-time"></p>
+        </div>
+    </div>
+    <script>
+        let errosEncontrados = 0;
+        const totalErros = 7;
+        const erros = [
+            { x: 510, y: 0 },
+            { x: 177, y: 160 },
+            { x: 820, y: 1270 },
+            { x: 910, y: 370 },
+            { x: 1054, y: 1184 },
+            { x: 490, y: 1280 },
+            { x: 430, y: 1338 },
+        ];
+        const errosMarcados = new Set();
+        let dicasRestantes = 3;
+        let timer = 0;
+        let timerInterval;
+        let isPaused = false;
+        let jogoIniciado = false;
+
+        const dicas = [
+            "Olhe bem nas partes superiores das imagens!",
+            "Preste atenção nos detalhes dos peixes!",
+            "Veja se algum objeto parece diferente!",
+            "Observe a cor de alguns elementos!",
+            "Tente olhar para os cantos da imagem!",
+            "Dê uma olhada no tesouro!",
+            "O que está fora do lugar?",
+            "Alguma coisa está faltando!",
+            "Veja as cores com atenção!",
+        ];
+
+        function iniciarCronometro() {
+            timerInterval = setInterval(() => {
+                if (!isPaused) {
+                    timer++;
+                    document.getElementById('timer-value').innerText = timer;
+                }
+            }, 1000);
+        }
+
+        function iniciarJogo() {
+            if (!jogoIniciado) {
+                const dataAtual = new Date();
+                document.getElementById('start-time').innerText = 
+                    `Jogo iniciado em: ${dataAtual.toLocaleDateString()} às ${dataAtual.toLocaleTimeString()}`;
+                document.getElementById('pause-button').disabled = false;
+                document.getElementById('hint-button').disabled = false;
+                document.getElementById('quit-button').disabled = false;
+                iniciarCronometro();
+                jogoIniciado = true;
+            }
+        }
+
+        function desistirJogo() {
+            clearInterval(timerInterval);
+            const dataDesistencia = new Date();
+            document.getElementById('end-time').innerText = 
+                `Jogo encerrado (Desistência) em: ${dataDesistencia.toLocaleDateString()} às ${dataDesistencia.toLocaleTimeString()}`;
+            alert("Você desistiu do jogo.");
+            document.getElementById('pause-button').disabled = true;
+            document.getElementById('hint-button').disabled = true;
+            document.getElementById('quit-button').disabled = true;
+        }
+
+        document.getElementById('image2').addEventListener('click', function(e) {
+            if (!jogoIniciado) return;
+            const img = e.target;
+            const rect = img.getBoundingClientRect();
+            const scaleX = img.naturalWidth / rect.width;
+            const scaleY = img.naturalHeight / rect.height;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+
+            for (let i = 0; i < erros.length; i++) {
+                const erro = erros[i];
+                if (!errosMarcados.has(i) && Math.abs(x - erro.x) < 50 && Math.abs(y - erro.y) < 50) {
+                    marcarErro((e.clientX - rect.left), (e.clientY - rect.top), i);
+                    break;
+                }
+            }
+        });
+
+        function marcarErro(x, y, index) {
+            const erroDiv = document.createElement('div');
+            erroDiv.className = 'error-mark';
+            erroDiv.style.left = `${x}px`;
+            erroDiv.style.top = `${y}px`;
+            document.getElementById('image2').appendChild(erroDiv);
+
+            errosMarcados.add(index);
+            errosEncontrados++;
+            document.getElementById('erros').innerText = errosEncontrados;
+
+            if (errosEncontrados === totalErros) {
+                clearInterval(timerInterval);
+                const dataFinal = new Date();
+                document.getElementById('end-time').innerText = 
+                    `Jogo terminado em: ${dataFinal.toLocaleDateString()} às ${dataFinal.toLocaleTimeString()}`;
+                alert(`Parabéns! Você encontrou todos os erros em ${timer} segundos!`);
+            }
+        }
+
+        document.getElementById('hint-button').addEventListener('click', function() {
+            if (dicasRestantes > 0) {
+                const randomIndex = Math.floor(Math.random() * dicas.length);
+                const dica = dicas[randomIndex];
+                dicas.splice(randomIndex, 1);
+
+                document.getElementById('hint-message').innerText = dica;
+                dicasRestantes--;
+                this.innerText = `Dica (${dicasRestantes} restantes)`;
+                if (dicasRestantes === 0) {
+                    this.disabled = true;
+                }
+            }
+        });
+
+        document.getElementById('pause-button').addEventListener('click', function() {
+            isPaused = !isPaused;
+            this.innerText = isPaused ? "Continuar" : "Pausar";
+        });
+
+        document.getElementById('start-button').addEventListener('click', iniciarJogo);
+        document.getElementById('quit-button').addEventListener('click', desistirJogo);
+    </script>
+</body>
+</html>

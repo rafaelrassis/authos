@@ -1,37 +1,49 @@
 body {
     font-family: 'Poppins', sans-serif;
     text-align: center;
-    background-color: #2A5D66;
-    color: #ffffff;
+    background-color: #2A5D66; /* Cor de fundo */
+    color: #ffffff; /* Cor do texto principal */
     margin: 0;
     padding: 0;
 }
 
 h1 {
     font-family: 'Fredoka One', sans-serif;
-    color: #FFDD44;
+    color: #ffd752; /* Um amarelo vibrante */
     font-weight: bold;
-    font-size: 2.5em;
+    font-size: 5.5em;
     margin-top: 10px;
 }
 
 #telaInicial {
     text-align: center;
-    background-color: #1f95b9;
+    background-color: #2e707c !important;
     padding: 20px;
     border-radius: 15px;
+    display: flex;
+    flex-direction: column; /* Alinha os itens em coluna */
+    justify-content: center; /* Centraliza verticalmente */
+    align-items: center; /* Centraliza horizontalmente */
+    max-width: 500px; /* Define uma largura máxima */
+    max-height: 400px; /* Define uma altura máxima */
+    margin: auto; /* Centraliza horizontalmente na tela */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Adiciona sombra para destaque */
+
 }
+
 
 input {
     margin: 10px;
     padding: 10px;
     font-size: 16px;
+    background-color: #ffffff; /* Fundo branco para os inputs */
+    color: #2A5D66; /* Texto escuro para contraste */
 }
 
 #areaDeJogo {
     width: 90%;
-    height: 60vh;
-    border: 4px dashed #ffffff;
+    height: 60vh; /* Ajusta a altura para 60% da altura da tela */
+    border: 4px dashed #ffffff; /* Borda branca */
     position: relative;
     margin: 20px auto;
     overflow: hidden;
@@ -76,42 +88,71 @@ input {
 }
 
 #botaoIniciar {
-    background-color: #FFAA33;
-    color: #fff;
+    background-color: #ffd752; /* Amarelo vibrante */
+    color: #2A5D66; /* Texto escuro */
     border: none;
-    padding: 15px 30px;
+    padding: 12px 24px;
     border-radius: 10px;
-    font-size: 18px;
-}
-
-#botaoIniciar:hover {
-    background-color: #ff9933;
-}
-
-#botaoDesistir {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 10;
-    background-color: #FF3333;
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
     font-size: 16px;
 }
 
-#botaoDesistir:hover {
-    background-color: #ff1a1a;
+#botaoIniciar:hover {
+    background-color: #ff9933; /* Um laranja suave */
 }
 
 #pontuacao, #tempoRestante {
     font-size: 1.5em;
     margin-top: 10px;
-    color: #ffffff;
-    background-color: rgba(0, 0, 0, 0.5);
+    color: #ffffff; /* Texto branco */
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
     padding: 10px;
     border-radius: 5px;
     display: inline-block;
     width: auto;
+}
+
+#botaoSilenciar {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#botaoSilenciar:hover {
+    background-color: #ccc;
+    transform: scale(1.1);
+}
+
+#resultado {
+    animation: slideIn 0.5s forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#telaInicial {
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+#telaInicial, #resultado {
+    display: flex;
+    flex-direction: column; /* Alinha os itens em coluna */
+    justify-content: center; /* Centraliza verticalmente */
+    align-items: center; /* Centraliza horizontalmente */
+    padding: 20px; /* Adiciona algum preenchimento */
+    border-radius: 15px; /* Mantém o border-radius */
 }

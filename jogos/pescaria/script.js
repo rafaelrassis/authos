@@ -6,12 +6,24 @@ let contadorLixo = 0;
 let elementosNaTela = 0; // Para contar peixes e lixos simultaneamente
 const areaDeJogo = document.getElementById('areaDeJogo');
 let velocidadeLixo = 1.5; // Velocidade inicial dos lixos
-let tempoDecorrido = 0; // Variável para armazenar o tempo em segundos
 
 // Variável para armazenar a quantidade de lixo escolhida
 let quantidadeLixoEscolhidos;
 let totalLixoColetado = 0; // Para rastrear o total de lixo coletado
 let totalPeixesColetados = 0; // Para rastrear o total de peixes coletados
+let inicioDoJogo; // Variável para armazenar o dia e hora de início
+let cronometroTempoJogo; // Armazena o tempo desde o início do jogo
+let tempoTotalJogo = parseInt(localStorage.getItem('tempoTotalJogo')) || 0; // Carrega o tempo do localStorage
+
+// Resetar tempo total ao iniciar um novo dia
+let inicioDoDia = new Date();
+inicioDoDia.setHours(0, 0, 0, 0); // Define o início do dia atual
+let agora = new Date();
+let tempoDesdeInicio = Math.floor((agora - inicioDoDia) / 1000);
+
+if (tempoDesdeInicio < 0) {
+    tempoTotalJogo = 0; // Zera o contador se for antes da meia-noite
+}
 
 function atualizarDimensoes() {
     return {
@@ -21,17 +33,21 @@ function atualizarDimensoes() {
 }
 
 document.getElementById('botaoIniciar').onclick = iniciarJogo;
-document.getElementById('botaoDesistir').onclick = desistirJogo;
+document.getElementById('botaoDesistir').style.display = 'none'; // Ocultar o botão de desistência inicialmente
 
 function iniciarJogo() {
     pontuacao = 0;
     contadorPeixes = 0;
     contadorLixo = 0;
-    velocidadeLixo = 1.5;
-    totalLixoColetado = 0;
-    totalPeixesColetados = 0;
-    duracaoDoJogo = 60;
-    tempoDecorrido = 0; // Reinicia a contagem de tempo
+    velocidadeLixo = 1.5; // Reiniciar a velocidade do lixo
+    totalLixoColetado = 0; // Reiniciar total de lixo coletado
+    totalPeixesColetados = 0; // Reiniciar total de peixes coletados
+    duracaoDoJogo = 60; // Reiniciar o tempo do jogo
+
+    // Registrar o dia e a hora do início do jogo
+    inicioDoJogo = new Date();
+    cronometroTempoJogo = setInterval(contarTempoDeJogo, 1000); // Inicia o cronômetro de tempo total
+    console.log("Jogo iniciado em:", inicioDoJogo);
 
     // Armazenar a quantidade de lixo escolhida
     quantidadeLixoEscolhidos = parseInt(document.getElementById('lixoEscolhidos').value);
@@ -43,6 +59,7 @@ function iniciarJogo() {
     areaDeJogo.style.display = 'block';
     document.getElementById('pontuacao').style.display = 'block';
     document.getElementById('tempoRestante').style.display = 'block';
+    document.getElementById('botaoDesistir').style.display = 'block';
 
     // Criar os elementos iniciais
     for (let i = 0; i < 2; i++) {
@@ -56,14 +73,20 @@ function iniciarJogo() {
     setTimeout(encerrarJogo, duracaoDoJogo * 1000);
 }
 
+// Função para contar o tempo total na área de jogo
+function contarTempoDeJogo() {
+    tempoTotalJogo++;
+    localStorage.setItem('tempoTotalJogo', tempoTotalJogo); // Salva o tempo no localStorage
+    console.log(`Tempo total no jogo: ${tempoTotalJogo} segundos`);
+}
+
 function atualizarJogo() {
     duracaoDoJogo--;
-    tempoDecorrido++; // Incrementa o tempo decorrido
     document.getElementById('tempoRestante').innerText = `Tempo: ${duracaoDoJogo}`;
 
     // Aumentar a velocidade do lixo a cada 10 segundos
     if (duracaoDoJogo % 10 === 0 && duracaoDoJogo > 0) {
-        velocidadeLixo += 0.2;
+        velocidadeLixo += 0.2; // Aumenta a velocidade
     }
 
     // Garantir que haja sempre 2 lixos e 3 peixes
@@ -120,13 +143,13 @@ function criarPeixe() {
 
         peixe.onclick = function() {
             pontuacao -= 3;
-            totalPeixesColetados++;
+            totalPeixesColetados++; // Incrementar total de peixes coletados
             document.getElementById('pontuacao').innerText = `Pontuação: ${pontuacao}`;
             peixe.remove();
             contadorPeixes--;
-            elementosNaTela--;  
+            elementosNaTela--;
             setTimeout(() => {
-                criarPeixe();
+                criarPeixe(); // Cria um novo peixe após um delay
             }, 1000);
         };
 
@@ -170,13 +193,13 @@ function criarLixo() {
 
         lixo.onclick = function() {
             pontuacao += 2;
-            totalLixoColetado++;
+            totalLixoColetado++; // Incrementar total de lixo coletado
             document.getElementById('pontuacao').innerText = `Pontuação: ${pontuacao}`;
             lixo.remove();
             contadorLixo--;
             elementosNaTela--;
             setTimeout(() => {
-                criarLixo();
+                criarLixo(); // Cria um novo lixo após um delay
             }, 1000);
         };
 
@@ -189,7 +212,9 @@ function criarLixo() {
 
 function encerrarJogo() {
     clearInterval(cronometro);
+    clearInterval(cronometroTempoJogo); // Para o cronômetro ao encerrar o jogo
     
+    // Definir a mensagem com base na quantidade de lixo coletado e se pegou muitos peixes
     let mensagem;
     let mensagemExtra = '';
 
@@ -211,29 +236,8 @@ function encerrarJogo() {
     areaDeJogo.style.display = 'none';
     document.getElementById('pontuacao').style.display = 'none';
     document.getElementById('tempoRestante').style.display = 'none';
+    document.getElementById('botaoDesistir').style.display = 'none';
 }
-
-function desistirJogo() {
-    clearInterval(cronometro);
-    document.getElementById('mensagemResultado').innerText = "Poxa!! Não desista da próxima vez";
-    document.getElementById('quantidadeLixoColetado').innerText = `Lixo Coletado: ${totalLixoColetado}`;
-    document.getElementById('resultado').style.display = 'block';
-    areaDeJogo.style.display = 'none';
-    document.getElementById('pontuacao').style.display = 'none';
-    document.getElementById('tempoRestante').style.display = 'none';
-
-    // Exibir o tempo total decorrido até o momento da desistência
-    console.log(`Tempo decorrido até desistir: ${tempoDecorrido} segundos`);
-}
-
-
-document.getElementById('botaoReiniciar').onclick = function() {
-    // Limpar a área de jogo antes de reiniciar
-    areaDeJogo.innerHTML = '';
-    elementosNaTela = 0; // Reiniciar contagem de elementos na tela
-    document.getElementById('resultado').style.display = 'none';
-    iniciarJogo();
-};
 
 document.getElementById('botaoTelaInicial').onclick = function() {
     // Limpar a área de jogo e voltar à tela inicial
@@ -241,6 +245,30 @@ document.getElementById('botaoTelaInicial').onclick = function() {
     elementosNaTela = 0; // Reiniciar contagem de elementos na tela
     document.getElementById('resultado').style.display = 'none';
     document.getElementById('telaInicial').style.display = 'block';
+};
+
+document.getElementById('botaoVoltarJogo').onclick = function() {
+    // Limpar a área de jogo e reiniciar
+    areaDeJogo.innerHTML = '';
+    elementosNaTela = 0; // Reiniciar contagem de elementos na tela
+    document.getElementById('resultado').style.display = 'none';
+    iniciarJogo(); // Reinicia o jogo com as mesmas configurações
+};
+
+// Botão para sair do jogo e parar o cronômetro
+document.getElementById('botaoDesistir').onclick = function() {
+    clearInterval(cronometro);
+    clearInterval(cronometroTempoJogo); // Para o cronômetro ao sair do jogo
+    console.log(`Tempo total de jogo até sair: ${tempoTotalJogo} segundos`);
+
+    areaDeJogo.style.display = 'none';
+    document.getElementById('resultado').style.display = 'block';
+    document.getElementById('botaoDesistir').style.display = 'none'; // Esconder botão de desistência na tela final
+
     document.getElementById('pontuacao').style.display = 'none';
     document.getElementById('tempoRestante').style.display = 'none';
+    
+    // Exibe a tela final
+    document.getElementById('resultado').style.display = 'block';
+    document.getElementById('mensagemResultado').innerText = "Poxa!! Não desista da próxima vez.";
 };

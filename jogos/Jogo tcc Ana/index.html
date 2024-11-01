@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Fish</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #2A5D66;
+            font-family: Arial, sans-serif;
+        }
+
+        #mainContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #gameContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            border: 2px solid #fcfcfc;
+            width: 400px;
+            height: 600px;
+        }
+
+        #infoPanel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 200px;
+            background-color: #1F3A40;
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-left: 20px;
+        }
+
+        .info-item {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        #controls {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background-color: #28a745;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #cronometro-container {
+            margin-top: 5px;
+            font-size: 24px;
+            color: white;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mainContainer">
+        <div id="gameContainer">
+            <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+            <div id="infoPanel">
+                <div class="info-item" id="pontuacao">Pontuação: 0</div>
+                <div class="info-item" id="record">Record: 0</div>
+                <div id="controls">
+                    <button id="startBtn">Iniciar</button>
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- Botão Fechar -->
+        <form method="POST" action="/authos/jogos/fechar_jogo.php" style="position: absolute; top: 10px; left: 10px;">
+            <button type="submit" class="btn btn-secondary">
+                Fechar Jogo
+            </button>
+        </form>
+
+        <div id="cronometro-container">Permanência no jogo: 00:00:00</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const fishImage = new Image();
+        fishImage.src = 'tata.png';
+
+        const backgroundImage = new Image();
+        backgroundImage.src = 'fotoc.png';
+
+        const pipeImage = new Image();
+        pipeImage.src = 'canudo3.png';
+
+        let pipes = [];
+        const pipeWidth = 40;
+        const pipeGap = 250;
+        const pipeSpeed = 2;
+        let frame = 0;
+        let score = 0;
+        let gameOver = false;
+        let gameStarted = false;
+        let animationId;
+        let record = localStorage.getItem("flappyFishRecord") || 0;
+
+        let segundos = parseInt(localStorage.getItem("tempoJogo")) || 0;
+        let cronometroInterval = null;
+        let cronometroIniciado = false;
+
+        const fish = {
+            x: 100,
+            y: 400,
+            width: 70,
+            height: 50,
+            gravity: 0.15,
+            lift: -6,
+            velocity: 0
+        };
+
+        const startBtn = document.getElementById("startBtn");
+        const cronometroDisplay = document.getElementById("cronometro-container");
+
+        document.getElementById("record").innerText = `Record: ${record}`;
+        document.getElementById("pontuacao").innerText = `Pontuação: ${score}`;
+
+        let dataHoraEntrada;
+
+        function registrarEntrada() {
+            dataHoraEntrada = new Date();
+            console.log(`Data e hora de entrada no jogo: ${dataHoraEntrada}`);
+        }
+
+        function verificarNovoDia() {
+            const dataAtual = new Date().toDateString();
+            const dataUltimaSessao = localStorage.getItem("dataUltimaSessao");
+            if (dataAtual !== dataUltimaSessao) {
+                segundos = 0; // Reiniciar o cronômetro se for um novo dia
+                localStorage.setItem("tempoJogo", segundos);
+                localStorage.setItem("dataUltimaSessao", dataAtual);
+            }
+            atualizarCronometro();
+        }
+
+        function formatTime(segundos) {
+            const horas = Math.floor(segundos / 3600);
+            const minutos = Math.floor((segundos % 3600) / 60);
+            const seg = segundos % 60;
+
+            return [
+                String(horas).padStart(2, '0'),
+                String(minutos).padStart(2, '0'),
+                String(seg).padStart(2, '0')
+            ].join(':');
+        }
+
+        function atualizarCronometro() {
+            cronometroDisplay.innerText = `Permanência no jogo: ${formatTime(segundos)}`;
+        }
+
+        function iniciarCronometro() {
+            if (!cronometroIniciado) {
+                cronometroInterval = setInterval(() => {
+                    segundos++;
+                    atualizarCronometro();
+                    localStorage.setItem("tempoJogo", segundos);
+                }, 1000);
+                cronometroIniciado = true;
+            }
+        }
+
+        function pararCronometro() {
+            clearInterval(cronometroInterval);
+            cronometroIniciado = false;
+        }
+
+        function createPipe() {
+            const top = Math.random() * (canvas.height - pipeGap - 50);
+            const bottom = canvas.height - top - pipeGap;
+            pipes.push({ x: canvas.width, top, bottom });
+        }
+
+        function updatePipes() {
+            if (frame % 130 === 0) createPipe();
+
+            pipes.forEach(pipe => {
+                pipe.x -= pipeSpeed;
+            });
+
+            if (pipes.length && pipes[0].x < -pipeWidth) {
+                pipes.shift();
+                score++;
+                document.getElementById("pontuacao").innerText = `Pontuação: ${score}`;
+            }
+        }
+
+        function drawPipes() {
+            pipes.forEach(pipe => {
+                ctx.drawImage(pipeImage, 0, 0, pipeImage.width, pipe.top, pipe.x, 0, pipeWidth, pipe.top);
+                const bottomY = canvas.height - pipe.bottom;
+                ctx.drawImage(pipeImage, 0, pipeImage.height - pipe.bottom, pipeImage.width, pipe.bottom, pipe.x, bottomY, pipeWidth, pipe.bottom);
+            });
+        }
+
+        function detectCollision() {
+            pipes.forEach(pipe => {
+                const fishHitsTopPipe = fish.x < pipe.x + pipeWidth &&
+                    fish.x + fish.width > pipe.x &&
+                    fish.y < pipe.top;
+
+                const fishHitsBottomPipe = fish.x < pipe.x + pipeWidth &&
+                    fish.x + fish.width > pipe.x &&
+                    fish.y + fish.height > canvas.height - pipe.bottom;
+
+                if (fishHitsTopPipe || fishHitsBottomPipe) gameOver = true;
+            });
+
+            if (fish.y + fish.height > canvas.height || fish.y < 0) gameOver = true;
+        }
+
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+
+            fish.velocity += fish.gravity;
+            fish.y += fish.velocity;
+
+            drawFish();
+            updatePipes();
+            drawPipes();
+            detectCollision();
+
+            frame++;
+        }
+
+        function drawFish() {
+            ctx.drawImage(fishImage, fish.x, fish.y, fish.width, fish.height);
+        }
+
+        function gameLoop() {
+            if (!gameOver) {
+                update();
+                animationId = requestAnimationFrame(gameLoop);
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            cancelAnimationFrame(animationId);
+            pararCronometro(); // Para o cronômetro ao terminar o jogo
+            showGameOverMessage();
+        }
+
+        function showGameOverMessage() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "white";
+            ctx.font = "30px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText("Fim de jogo", canvas.width / 2, canvas.height / 2 + 20);
+
+            if (score > record)
+            if (score > record) {
+                record = score;
+                localStorage.setItem("flappyFishRecord", record);
+                document.getElementById("record").innerText = `Record: ${record}`;
+            }
+
+            startBtn.innerText = "Recomeçar";
+            gameStarted = false;
+        }
+
+        function startGame() {
+            pipes = [];
+            frame = 0;
+
+            score = 0;
+            gameOver = false;
+            fish.y = 400;
+            fish.velocity = 0;
+            gameStarted = true;
+            startBtn.innerText = "JOGANDO";
+            iniciarCronometro();
+            registrarEntrada(); // Armazena a data e hora de entrada no início de cada partida
+            gameLoop();
+        }
+
+        startBtn.addEventListener("click", () => {
+            if (!gameStarted) {
+                startGame();
+            } else {
+                resetGame();
+                startGame();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.code === "Space" && gameStarted && !gameOver) {
+                fish.velocity = fish.lift;
+            }
+        });
+
+        verificarNovoDia(); // Reseta o cronômetro se o dia for novo
+        atualizarCronometro(); // Atualiza o cronômetro ao carregar a página
+    </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+

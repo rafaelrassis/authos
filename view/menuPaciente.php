@@ -54,7 +54,7 @@
         ?>
 
 
-<form action="../../view/telapaciente.php" method="GET" class="top-bar-form">
+<form action="../view/telapaciente.php" method="GET" class="top-bar-form">
             <button type="submit" class="btn-top">Menu</button>
         </form>
 

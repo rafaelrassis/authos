@@ -1,21 +1,28 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/authos/model/conexao.php';
+require_once '../model/conexao.php';
 
 class JogosModel {
     private $conexao;
 
     public function __construct() {
         $this->conexao = (new Conexao())->conectar();
+        echo "Conexão ao banco de dados estabelecida.<br>";
     }
 
-   
-    public function atualizarAvaliacoesPescaria($cpf) {
+    public function atualizarAvaliacoesPescaria($cpf) { 
         // Verifique os valores recebidos
-        error_log("Atualizando avaliações. CPF: " . $cpf . ", Data e Hora de Entrada: " . $_SESSION['dataHoraEntrada']);
-    
+        echo "Atualizando avaliações. CPF: " . $cpf . "<br>";
+        echo "Data e Hora de Entrada: " . $_SESSION['dataHoraEntrada'] . "<br>";
+        
         // Verifica se a data e hora de entrada estão definidas
         if (!isset($_SESSION['dataHoraEntrada'])) {
-            error_log("Data e Hora de Entrada não definida na sessão.");
+            echo "Data e Hora de Entrada não definida na sessão.<br>";
+            return false;
+        }
+        
+        // Verifica se o número do jogo está definido
+        if (!isset($_SESSION['numeroJogo'])) {
+            echo "ID de Avaliação não definida na sessão.<br>";
             return false;
         }
     
@@ -26,29 +33,29 @@ class JogosModel {
     
             // Binding dos parâmetros
             $stmt->bindParam(':dataHoraEntrada', $_SESSION['dataHoraEntrada']);
-            $stmt->bindParam(':cpf', $cpf);
-            $stmt->bindParam(':id_avaliacao', $_SESSION['numeroJogo']);
+            $stmt->bindParam(':cpf', $cpf); // Usando o CPF recebido como argumento
+            $stmt->bindParam(':id_avaliacao', $_SESSION['numeroJogo']); // Assegure-se que esta variável está definida
     
             // Log dos parâmetros
-            error_log("DataHoraEntrada: " . $_SESSION['dataHoraEntrada']);
-            error_log("CPF: " . $cpf);
-            error_log("ID Avaliacao: " . $_SESSION['numeroJogo']);
+            echo "DataHoraEntrada: " . $_SESSION['dataHoraEntrada'] . "<br>";
+            echo "CPF: " . $cpf . "<br>";
+            echo "ID Avaliacao: " . $_SESSION['numeroJogo'] . "<br>";
     
             // Executa a query
             $executed = $stmt->execute();
             
             // Log de erro se a execução falhar
             if (!$executed) {
-                error_log("Erro ao executar a consulta: " . implode(", ", $stmt->errorInfo()));
+                echo "Erro ao executar a consulta: " . implode(", ", $stmt->errorInfo()) . "<br>";
             }
     
             // Loga o número de linhas afetadas
-            error_log("Linhas afetadas: " . $stmt->rowCount());
+            echo "Linhas afetadas: " . $stmt->rowCount() . "<br>";
     
             // Retorna true se a execução foi bem-sucedida e linhas foram afetadas
             return $executed && $stmt->rowCount() > 0;
         } catch (PDOException $e) {
-            error_log("Erro ao atualizar avaliação: " . $e->getMessage());
+            echo "Erro ao atualizar avaliação: " . $e->getMessage() . "<br>";
             return false;
         }
     }

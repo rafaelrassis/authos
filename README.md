@@ -1,126 +1,89 @@
-# Sistema de Autenticação e Gerenciamento de Pacientes
+Para criar uma documentação completa para o repositório GitHub authos, vamos seguir um formato padrão de documentação que inclui seções como Introdução, Instalação, Uso, Contribuição, Licença e mais. Aqui está um exemplo de como você pode estruturar essa documentação:
 
-## Descrição do Projeto
+markdown
+Copiar código
+# Authos
 
-Este projeto é um sistema completo de autenticação e gerenciamento de pacientes, com funcionalidades que permitem o cadastro e login de especialistas e pacientes. Também inclui a busca, visualização e gestão de informações de pacientes em uma interface organizada. O sistema foi desenvolvido para facilitar o gerenciamento de dados médicos e de pacientes com segurança e eficiência.
-
-----------
+Authos é uma biblioteca de autenticação simples e eficaz, projetada para facilitar o processo de autenticação em aplicativos PHP.
 
 ## Índice
 
-1.  [Instalação](#instala%C3%A7%C3%A3o)
-2.  [Funcionalidades](#funcionalidades)
-    -   [Tela de Login de Especialistas](#tela-de-login-de-especialistas)
-    -   [Tela de Login de Pacientes](#tela-de-login-de-pacientes)
-    -   [Tela de Cadastro de Especialistas](#tela-de-cadastro-de-especialistas)
-    -   [Tela de Busca de Pacientes](#tela-de-busca-de-pacientes)
-    -   [Tela de Informações do Paciente](#tela-de-informa%C3%A7%C3%B5es-do-paciente)
-3.  [Contribuição](#contribui%C3%A7%C3%A3o)
-4.  [Licença](#licen%C3%A7a)
+- [Introdução](#introdução)
+- [Instalação](#instalação)
+- [Uso](#uso)
+- [Contribuição](#contribuição)
+- [Licença](#licença)
+- [Autoria](#autoria)
 
-----------
+## Introdução
+
+Authos oferece um conjunto de ferramentas para gerenciar o processo de autenticação de usuários em aplicações PHP. A biblioteca é leve, fácil de usar e altamente configurável.
 
 ## Instalação
 
-Para instalar o projeto, siga as etapas abaixo:
+Para instalar o Authos, você pode clonar o repositório ou instalar via Composer.
 
-1.  Clone o repositório:
-    
-    bash
-    
-    Copiar código
-    
-    `git clone https://github.com/rafaelrassis/authos.git
-    cd authos` 
-    
-2.  Certifique-se de que o Composer está instalado. Em seguida, execute o comando para instalar as dependências:
-    
-    bash
-    
-    Copiar código
-    
-    `composer install` 
-    
+### Clonando o Repositório
 
-----------
+```bash
+git clone https://github.com/rafaelrassis/authos.git
+cd authos
+Usando Composer
+Adicione a seguinte linha ao seu arquivo composer.json:
 
-## Funcionalidades
+json
+Copiar código
+"require": {
+    "rafaelrassis/authos": "^1.0"
+}
+Depois, execute:
 
-### Tela de Login de Especialistas
+bash
+Copiar código
+composer install
+Uso
+Para utilizar o Authos em sua aplicação, siga estas etapas:
 
--   Permite que especialistas se autentiquem utilizando seu **CIP** e **senha**.
--   Realiza **sanitização dos dados** para garantir a segurança.
--   Executa uma **verificação no banco de dados** para confirmar se os dados inseridos correspondem a um especialista registrado.
--   Redireciona o especialista para a **tela principal** do sistema em caso de sucesso ou exibe uma mensagem de erro em caso de falha.
+1. Configuração
+Configure as credenciais do banco de dados e as opções de autenticação em um arquivo de configuração.
 
-### Tela de Login de Pacientes
+2. Iniciando o Authos
+Inclua a biblioteca em seu projeto:
 
--   Funcionalidade semelhante à tela de login de especialistas.
--   Permite que pacientes se autentiquem com **CPF** e **senha**, também sanitizando e verificando os dados no banco.
--   Após a autenticação bem-sucedida, o paciente é redirecionado para a tela principal.
+php
+Copiar código
+require_once 'path/to/authos/autoload.php';
 
-### Tela de Cadastro de Especialistas
+use Authos\Auth;
 
--   Interface de cadastro para novos especialistas no sistema.
--   Campos obrigatórios do formulário:
-    -   **CIP**
-    -   **CNPJ**
-    -   **CPF**
-    -   **Nome**
-    -   **Especialidade** (menu suspenso, populado pelo método `consultaEspecialidade()` a partir dos dados do banco de dados)
-    -   **Senha**
--   Permite criar, inativar e reativar especialidades para os especialistas.
+$auth = new Auth();
+3. Registrando um Usuário
+Para registrar um novo usuário, utilize:
 
-### Tela de Busca de Pacientes
+php
+Copiar código
+$auth->register('username', 'password', 'email@example.com');
+4. Autenticando um Usuário
+Para autenticar um usuário:
 
--   Interface que permite a busca de pacientes pelo **código**.
--   Se o paciente for encontrado:
-    -   Suas informações são **salvas na sessão**.
-    -   O usuário é **redirecionado** para a tela de informações detalhadas do paciente.
--   Se o paciente não for encontrado, é exibido um **código de erro**.
+php
+Copiar código
+if ($auth->login('username', 'password')) {
+    echo "Usuário autenticado com sucesso!";
+} else {
+    echo "Falha na autenticação!";
+}
+5. Logout
+Para desconectar um usuário:
 
-### Tela de Informações do Paciente
+php
+Copiar código
+$auth->logout();
+Contribuição
+Contribuições são bem-vindas! Se você deseja contribuir com o Authos, siga estas etapas:
 
--   Exibe informações detalhadas sobre o paciente, como:
-    -   **CPF**
-    -   **Nome**
-    -   **Data de Nascimento**
-    -   **Email**
-    -   **Senha**
-    -   **Foto**
--   Permite ao usuário visualizar e gerenciar informações de pacientes de forma eficiente e intuitiva.
-
-----------
-
-## Contribuição
-
-Contribuições são bem-vindas! Para contribuir, siga os passos abaixo:
-
-1.  Faça um **fork** do repositório.
-    
-2.  Crie uma nova **branch**:
-    
-    bash
-    
-    Copiar código
-    
-    `git checkout -b feature/nova-funcionalidade` 
-    
-3.  Realize suas alterações e **commite**:
-    
-    bash
-    
-    Copiar código
-    
-    `git commit -m 'Adicionando nova funcionalidade'` 
-    
-4.  Envie suas alterações para o repositório original:
-    
-    bash
-    
-    Copiar código
-    
-    `git push origin feature/nova-funcionalidade` 
-    
-5.  Crie um **Pull Request** para que suas alterações sejam revisadas e integradas.
-
+Fork este repositório.
+Crie uma nova branch (git checkout -b feature/nome-da-feature).
+Faça suas alterações e commit (git commit -m 'Adiciona nova feature').
+Push para a branch (git push origin feature/nome-da-feature).
+Abra um Pull Request.

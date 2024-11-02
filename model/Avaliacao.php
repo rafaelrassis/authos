@@ -11,7 +11,7 @@ class Avaliacao {
 
     private function obterIdEspecialista() {
         try {
-            $cpf = $_SESSION['conectadopaciente'];
+            $cpf = $_SESSION['pacienteCpf'];
             $stmt = $this->pdo->prepare("SELECT cip FROM paciente WHERE cpf = :cpf");
             $stmt->bindValue(':cpf', $cpf);
             $stmt->execute();

@@ -47,7 +47,7 @@
       
         if (basename($_SERVER['PHP_SELF']) != 'telapacienteCod.php' && basename($_SERVER['PHP_SELF']) != 'alterarEspecialista.php') {
         ?>
-            <span class="patient-connected">Paciente Conectado: <?php echo $_SESSION['conectadopaciente'] ?></span>
+            <span class="patient-connected">Paciente Conectado: <?php echo $_SESSION['pacienteCpf'] ?></span>
             
         <?php
         }

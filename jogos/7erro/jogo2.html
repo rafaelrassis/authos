@@ -101,7 +101,13 @@
             <p id="start-time"></p>
             <p id="end-time"></p>
         </div>
-    </div>
+      
+     <!-- Botão Fechar -->
+     <form method="POST" action="/authos/jogos/fechar_jogo.php" style="position: absolute; top: 10px; left: 10px;">
+        <button type="submit" class="btn btn-secondary">
+            Fechar Jogo
+        </button>
+    </form>
     <script>
         let errosEncontrados = 0;
         const totalErros = 7;

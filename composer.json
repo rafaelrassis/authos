@@ -1,0 +1,16 @@
+{
+    "name": "rafael/authos",
+    "description": "Este projeto é um sistema completo de autenticação e gerenciamento de pacientes, com funcionalidades que permitem o cadastro e login de especialistas e pacientes. Também inclui a busca, visualização e gestão de informações de pacientes em uma interface organizada. O sistema foi desenvolvido para facilitar o gerenciamento de dados médicos e de pacientes com segurança e eficiência.",
+    "autoload": {
+        "psr-4": {
+            "Rafael\\Authos\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rafael Assis",
+            "email": "rafaelrassis@hotmail.com"
+        }
+    ],
+    "require": {}
+}

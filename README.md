@@ -100,10 +100,6 @@ Contribuições são bem-vindas! Se você deseja contribuir com o Authos, siga e
 4. Push para a branch (`git push origin feature/nome-da-feature`).
 5. Abra um Pull Request.
 
-## Licença
-
-Este projeto está licenciado sob a [MIT License](LICENSE).
 
 ## Autoria
 
-Authos foi criado por Rafael Rassis. Para mais informações, visite [rafaelrassis](https://github.com/rafaelrassis).

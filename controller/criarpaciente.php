@@ -4,6 +4,25 @@ require_once '../model/paciente.php';
 
 session_start();
 
+function validaCPF($cpf) {
+    $cpf = preg_replace('/[^0-9]/is', '', $cpf);
+
+    if (strlen($cpf) != 11 || preg_match('/(\d)\1{10}/', $cpf)) {
+        return false;
+    }
+
+    for ($t = 9; $t < 11; $t++) {
+        for ($d = 0, $c = 0; $c < $t; $c++) {
+            $d += $cpf[$c] * (($t + 1) - $c);
+        }
+        $d = ((10 * $d) % 11) % 10;
+        if ($cpf[$c] != $d) {
+            return false;
+        }
+    }
+    return true;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cpf = trim($_POST['cpf']);
     $nome = trim($_POST['nome']);
@@ -16,9 +35,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $pacienteModel = new Paciente();
 
+    if (!validaCPF($cpf)) {
+        $_SESSION['statusCadastroPaciente'] = "CPF inválido. Por favor, insira um CPF válido.";
+        header('Location: ../view/criarpaciente.php');
+        exit;
+    }
+
     if ($pacienteModel->pacienteExiste($cpf, $email)) {
         $_SESSION['statusCadastroPaciente'] = "Um paciente com este CPF ou e-mail já está cadastrado.";
-        header('Location: ../view/formlogin.php');
+        header('Location: ../view/criarpaciente.php');
         exit;
     }
 
@@ -35,21 +60,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (!move_uploaded_file($foto['tmp_name'], $fotoPath)) {
                 $_SESSION['statusCadastroPaciente'] = "Erro ao fazer upload da foto.";
-                header('Location: ../view/formlogin.php');
+                header('Location: ../view/criarpaciente.php');
                 exit;
             }
         } else {
             $_SESSION['statusCadastroPaciente'] = "Formato de arquivo não suportado. Aceito apenas JPG e PNG.";
-            header('Location: ../view/formlogin.php');
+            header('Location: ../view/criarpaciente.php');
             exit;
         }
     } else {
         $_SESSION['statusCadastroPaciente'] = "Erro ao processar a foto.";
-        header('Location: ../view/formlogin.php');
+        header('Location: ../view/criarpaciente.php');
         exit;
     }
-
-    var_dump($cpf, $nome, $senha, $email, $fotoPath, $cip, $data_nascimento, $telefone);
 
     if ($pacienteModel->inserePaciente($cpf, $nome, $senha, $email, $fotoPath, $cip, $data_nascimento, $telefone)) {
         $_SESSION['statusCadastroPaciente'] = "Paciente cadastrado com sucesso!";
@@ -57,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     } else {
         $_SESSION['statusCadastroPaciente'] = "Erro ao cadastrar o paciente.";
-        header('Location: ../view/formlogin.php');
+        header('Location: ../view/criarpaciente.php');
         exit;
     }
 } else {
